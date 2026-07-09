@@ -1,0 +1,49 @@
+{
+    "highest_human_score": 5,
+    "highest_ai_score": 0,
+    "longest_survival_steps": 210,
+    "most_apples_single_game": 5,
+    "best_training_reward": 316.15,
+    "fastest_training_time_sec": 148.32,
+    "recent_sessions": [
+        {
+            "mode": "Human vs AI",
+            "score": 5,
+            "survival_steps": 113,
+            "date": "2026-07-09 08:48"
+        },
+        {
+            "mode": "Human",
+            "score": 5,
+            "survival_steps": 210,
+            "date": "2026-07-09 08:45"
+        }
+    ],
+    "achievements": {
+        "first_steps": {
+            "unlocked": true,
+            "title": "First Steps",
+            "desc": "Train for at least 10 episodes"
+        },
+        "deep_learner": {
+            "unlocked": true,
+            "title": "Deep Learner",
+            "desc": "Train for at least 500 episodes"
+        },
+        "apple_gobbler": {
+            "unlocked": false,
+            "title": "High Scorer",
+            "desc": "Get a high score in Human Mode"
+        },
+        "ai_overlord": {
+            "unlocked": false,
+            "title": "AI Overlord",
+            "desc": "AI reaches high score"
+        },
+        "beat_the_machine": {
+            "unlocked": true,
+            "title": "Beat the Machine",
+            "desc": "Win against the AI in Human vs AI mode"
+        }
+    }
+}

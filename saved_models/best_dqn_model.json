@@ -1,0 +1,12 @@
+{
+    "filename": "best_dqn_model.pth",
+    "training_date": "2026-07-08 20:22",
+    "best_reward": 55.25,
+    "episode": 38,
+    "model_size_kb": 76.1,
+    "state_size": 12,
+    "action_size": 4,
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "batch_size": 64
+}

@@ -1,0 +1,290 @@
+"""
+=========================================================
+GameBrain
+
+Dashboard
+=========================================================
+"""
+
+import os
+import pandas as pd
+import customtkinter as ctk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+from app.utils.settings_manager import SettingsManager
+from app.pages.play import GAME_REGISTRY
+
+class DashboardView(ctk.CTkFrame):
+    def __init__(self, parent, game_id, back_callback):
+        super().__init__(parent, fg_color="transparent")
+        
+        self.game_id = game_id
+        self.back_callback = back_callback
+        
+        self.best_reward = 0
+        self.total_episodes = 0
+        self.average_reward = 0
+        self.last_loss = 0
+        self.df = None
+        self.canvas_widget = None
+        
+        self.load_training_data()
+        self.create_ui()
+
+    def load_training_data(self):
+        log_file = f"training_logs/training_log_{self.game_id}.csv"
+
+        self.best_reward = 0
+        self.total_episodes = 0
+        self.average_reward = 0
+        self.last_loss = 0
+        self.df = None
+
+        if not os.path.exists(log_file):
+            return
+
+        try:
+            df = pd.read_csv(log_file)
+            if len(df) == 0:
+                return
+
+            self.df = df
+            self.total_episodes = len(df)
+            self.best_reward = round(df["Reward"].max(), 2)
+            self.average_reward = round(df["Reward"].mean(), 2)
+            self.last_loss = round(df["Loss"].iloc[-1], 5)
+        except Exception as e:
+            print(e)
+
+    def refresh_dashboard(self):
+        self.load_training_data()
+
+        self.episode_value.configure(text=str(self.total_episodes))
+        self.best_reward_value.configure(text=str(self.best_reward))
+        self.average_reward_value.configure(text=str(self.average_reward))
+        self.loss_value.configure(text=str(self.last_loss))
+
+        model = f"saved_models/best_dqn_model_{self.game_id}.pth"
+
+        if os.path.exists(model):
+            self.status_label.configure(text="✅ Trained Model Available", text_color=("#006400", "lightgreen"))
+        else:
+            self.status_label.configure(text="❌ No Trained Model", text_color=("#8B0000", "red"))
+            
+        self.update_graphs()
+
+    def update_graphs(self):
+        if self.canvas_widget:
+            self.canvas_widget.destroy()
+            self.canvas_widget = None
+
+        if self.df is None or len(self.df) == 0:
+            lbl = ctk.CTkLabel(self.graph_container, text="No training data available to display graphs.", text_color=("gray30", "gray70"))
+            lbl.pack(expand=True)
+            self.canvas_widget = lbl
+            return
+
+        fig = Figure(figsize=(10, 4), dpi=100, facecolor='none')
+        
+        ax1 = fig.add_subplot(121)
+        ax1.plot(self.df["Episode"], self.df["Reward"], color="#10B981", alpha=0.5, label="Reward")
+        window = min(50, len(self.df))
+        if window > 0:
+            ma = self.df["Reward"].rolling(window=window).mean()
+            ax1.plot(self.df["Episode"], ma, color="#059669", linewidth=2, label=f"{window}-Ep MA")
+        
+        ax1.set_title("Reward Progression", color="gray")
+        ax1.set_xlabel("Episode", color="gray")
+        ax1.set_ylabel("Reward", color="gray")
+        ax1.tick_params(colors="gray")
+        ax1.legend(loc="upper left")
+        ax1.grid(color="gray", linestyle="--", linewidth=0.5, alpha=0.3)
+
+        ax2 = fig.add_subplot(122)
+        ax2.plot(self.df["Episode"], self.df["Loss"], color="#EF4444", alpha=0.6)
+        ax2.set_title("Loss Minimization", color="gray")
+        ax2.set_xlabel("Episode", color="gray")
+        ax2.set_ylabel("Loss", color="gray")
+        ax2.tick_params(colors="gray")
+        ax2.grid(color="gray", linestyle="--", linewidth=0.5, alpha=0.3)
+        ax2.set_yscale("log")
+
+        fig.tight_layout()
+
+        canvas = FigureCanvasTkAgg(fig, master=self.graph_container)
+        canvas.draw()
+        
+        self.canvas_widget = canvas.get_tk_widget()
+        self.canvas_widget.pack(fill="both", expand=True)
+
+    def create_card(self, parent, title, value):
+        frame = ctk.CTkFrame(
+            parent,
+            width=220,
+            height=120,
+            fg_color=("gray90", "#202020"),
+            corner_radius=10,
+            border_width=1,
+            border_color=("gray85", "#303030")
+        )
+        frame.pack_propagate(False)
+
+        ctk.CTkLabel(
+            frame,
+            text=title,
+            font=("Arial", 16, "bold"),
+            text_color=("gray40", "gray70")
+        ).pack(pady=(20, 5))
+
+        value_label = ctk.CTkLabel(
+            frame,
+            text=str(value),
+            font=("Arial", 28, "bold"),
+            text_color=("#005B96", "cyan")
+        )
+        value_label.pack()
+
+        if title == "Episodes":
+            self.episode_value = value_label
+        elif title == "Best Reward":
+            self.best_reward_value = value_label
+        elif title == "Average Reward":
+            self.average_reward_value = value_label
+        elif title == "Latest Loss":
+            self.loss_value = value_label
+
+        return frame
+
+    def create_ui(self):
+        header_frame = ctk.CTkFrame(self, fg_color="transparent")
+        header_frame.pack(fill="x", padx=20, pady=25)
+        
+        back_btn = ctk.CTkButton(
+            header_frame, 
+            text="⬅ Back to Menu", 
+            width=140, 
+            fg_color="#303030", 
+            hover_color="#404040",
+            command=self.back_callback
+        )
+        back_btn.pack(side="left")
+
+        game_info = GAME_REGISTRY.get(self.game_id, GAME_REGISTRY["snake"])
+        self.title_lbl = ctk.CTkLabel(
+            header_frame,
+            text=f"📊 AI Training Dashboard - {game_info['name']}",
+            font=("Arial", 30, "bold")
+        )
+        self.title_lbl.pack(side="left", padx=20)
+
+        top = ctk.CTkFrame(self, fg_color="transparent")
+        top.pack(fill="x", padx=20, pady=10)
+
+        self.create_card(top, "Episodes", self.total_episodes).pack(side="left", padx=15)
+        self.create_card(top, "Best Reward", self.best_reward).pack(side="left", padx=15)
+        self.create_card(top, "Average Reward", self.average_reward).pack(side="left", padx=15)
+        self.create_card(top, "Latest Loss", self.last_loss).pack(side="left", padx=15)
+
+        bottom = ctk.CTkFrame(self, fg_color=("gray95", "#202020"), corner_radius=15, border_width=1, border_color=("gray85", "#303030"))
+        bottom.pack(fill="both", expand=True, padx=35, pady=20)
+
+        header = ctk.CTkFrame(bottom, fg_color="transparent")
+        header.pack(fill="x", padx=20, pady=15)
+
+        ctk.CTkLabel(header, text="Historical Performance", font=("Arial", 20, "bold")).pack(side="left")
+        self.status_label = ctk.CTkLabel(header, text="", font=("Arial", 16, "bold"))
+        self.status_label.pack(side="right")
+
+        self.graph_container = ctk.CTkFrame(bottom, fg_color="transparent")
+        self.graph_container.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+
+        self.refresh_dashboard()
+
+class DashboardPage(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent, fg_color="#1B1B1B")
+        self.settings = SettingsManager()
+        self.current_view = None
+
+        self.menu_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.menu_frame.pack(fill="both", expand=True)
+
+        self.scroll_canvas = ctk.CTkScrollableFrame(self.menu_frame, fg_color="transparent")
+        self.scroll_canvas.pack(fill="both", expand=True, padx=20, pady=20)
+
+        self.build_menu_view()
+
+    def build_menu_view(self):
+        title = ctk.CTkLabel(
+            self.scroll_canvas,
+            text="📊 Choose Dashboard",
+            font=("Arial", 34, "bold")
+        )
+        title.pack(pady=(20, 5))
+
+        subtitle = ctk.CTkLabel(
+            self.scroll_canvas,
+            text="Select a game to view its AI training performance metrics",
+            font=("Arial", 16),
+            text_color="gray70"
+        )
+        subtitle.pack(pady=(0, 25))
+
+        for game_id, info in GAME_REGISTRY.items():
+            card = ctk.CTkFrame(
+                self.scroll_canvas,
+                corner_radius=20,
+                fg_color="#202020",
+                border_width=1,
+                border_color="#303030"
+            )
+            card.pack(fill="x", padx=35, pady=15)
+
+            left = ctk.CTkFrame(card, fg_color="transparent")
+            left.pack(side="left", padx=25, pady=20)
+
+            ctk.CTkLabel(
+                left,
+                text=info["name"],
+                font=("Arial", 28, "bold")
+            ).pack(anchor="w")
+
+            ctk.CTkLabel(
+                left,
+                text=info["desc"],
+                font=("Arial", 15),
+                text_color="gray70"
+            ).pack(anchor="w", pady=(5, 0))
+
+            right = ctk.CTkFrame(card, fg_color="transparent")
+            right.pack(side="right", padx=25, pady=20)
+
+            ctk.CTkButton(
+                right,
+                text="📈 View Dashboard",
+                width=180,
+                height=45,
+                fg_color="#10B981",
+                hover_color="#059669",
+                corner_radius=12,
+                font=("Arial", 14, "bold"),
+                command=lambda gid=game_id: self.show_view(gid)
+            ).pack(pady=6)
+
+    def show_view(self, game_id):
+        self.settings.set("active_game", game_id)
+        
+        self.menu_frame.pack_forget()
+
+        if self.current_view:
+            self.current_view.destroy()
+
+        self.current_view = DashboardView(self, game_id, self.show_menu)
+        self.current_view.pack(fill="both", expand=True)
+
+    def show_menu(self):
+        if self.current_view:
+            self.current_view.destroy()
+            self.current_view = None
+        self.menu_frame.pack(fill="both", expand=True)

@@ -1,0 +1,217 @@
+{
+    "highest_human_score": 7,
+    "highest_ai_score": 4,
+    "longest_survival_steps": 529,
+    "most_apples_single_game": 7,
+    "best_training_reward": 55.25,
+    "fastest_training_time_sec": 33.72,
+    "recent_sessions": [
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 43,
+            "date": "2026-07-09 08:28"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 21,
+            "date": "2026-07-09 08:28"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 61,
+            "date": "2026-07-09 08:28"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 521,
+            "date": "2026-07-09 08:27"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 110,
+            "date": "2026-07-09 08:27"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 109,
+            "date": "2026-07-09 08:26"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 108,
+            "date": "2026-07-09 08:26"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 1,
+            "survival_steps": 109,
+            "date": "2026-07-09 08:26"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 41,
+            "date": "2026-07-09 08:26"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 41,
+            "date": "2026-07-09 08:19"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 41,
+            "date": "2026-07-09 08:19"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 1,
+            "survival_steps": 41,
+            "date": "2026-07-09 08:19"
+        },
+        {
+            "mode": "Human",
+            "score": 3,
+            "survival_steps": 529,
+            "date": "2026-07-09 08:19"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 41,
+            "date": "2026-07-09 08:18"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 11,
+            "date": "2026-07-09 08:18"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 12,
+            "date": "2026-07-09 08:18"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 11,
+            "date": "2026-07-09 08:18"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 51,
+            "date": "2026-07-09 08:06"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 21,
+            "date": "2026-07-09 08:06"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 21,
+            "date": "2026-07-09 08:06"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 109,
+            "date": "2026-07-09 08:05"
+        },
+        {
+            "mode": "AI",
+            "score": 1,
+            "survival_steps": 13,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 4,
+            "survival_steps": 41,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 1,
+            "survival_steps": 16,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 0,
+            "survival_steps": 20,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 1,
+            "survival_steps": 21,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 3,
+            "survival_steps": 34,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 1,
+            "survival_steps": 27,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 0,
+            "survival_steps": 12,
+            "date": "2026-07-08 20:56"
+        },
+        {
+            "mode": "AI",
+            "score": 2,
+            "survival_steps": 22,
+            "date": "2026-07-08 20:56"
+        }
+    ],
+    "achievements": {
+        "first_steps": {
+            "unlocked": true,
+            "title": "First Steps",
+            "desc": "Train for at least 10 episodes"
+        },
+        "deep_learner": {
+            "unlocked": true,
+            "title": "Deep Learner",
+            "desc": "Train for at least 500 episodes"
+        },
+        "apple_gobbler": {
+            "unlocked": false,
+            "title": "Apple Gobbler",
+            "desc": "Get a score of 10 in Human Mode"
+        },
+        "ai_overlord": {
+            "unlocked": false,
+            "title": "AI Overlord",
+            "desc": "AI score reaches 30"
+        },
+        "beat_the_machine": {
+            "unlocked": true,
+            "title": "Beat the Machine",
+            "desc": "Win against the AI in Human vs AI mode"
+        }
+    }
+}
