@@ -34,17 +34,17 @@ ctk.set_default_color_theme("blue")
 # Import Pages
 # -------------------------------------------------------
 
-from widgets.sidebar import Sidebar
-from utils.settings_manager import SettingsManager
+from app.widgets.sidebar import Sidebar
+from app.utils.settings_manager import SettingsManager
 
-from pages.home import HomePage
-from pages.play import PlayPage
-from pages.academy import AcademyPage
-from pages.dashboard import DashboardPage
-from pages.leaderboard import LeaderboardPage
-from pages.settings import SettingsPage
-from pages.ai_training import AITrainingPage
-from pages.game_launcher import GameLauncher
+from app.pages.home import HomePage
+from app.pages.play import PlayPage
+from app.pages.academy import AcademyPage
+from app.pages.dashboard import DashboardPage
+from app.pages.leaderboard import LeaderboardPage
+from app.pages.settings import SettingsPage
+from app.pages.ai_training import AITrainingPage
+from app.pages.game_launcher import GameLauncher
 
 
 class GameBrain(ctk.CTk):
@@ -187,17 +187,14 @@ class GameBrain(ctk.CTk):
 
         self.current_page = self.pages[page]
 
+        # Call the on_show hook if the page has one to refresh its state
+        if hasattr(self.current_page, "on_show"):
+            self.current_page.on_show()
+
         self.current_page.pack(
             fill="both",
             expand=True
         )
-
-        # Refresh Dashboard automatically
-        if page == "dashboard":
-
-            if hasattr(self.current_page, "refresh_dashboard"):
-
-                self.current_page.refresh_dashboard()
 
         titles = {
 
@@ -207,9 +204,9 @@ class GameBrain(ctk.CTk):
 
             "academy": "🧠 AI Academy",
 
-            "dashboard": "📊 Dashboard",
+            "dashboard": "📈 Dashboard",
 
-            "leaderboard": "🏆 Leaderboard",
+            "leaderboard": "🏅 Leaderboard",
 
             "settings": "⚙ Settings",
 
@@ -226,6 +223,11 @@ class GameBrain(ctk.CTk):
             text_color="lightgreen"
         )
 
+    def toggle_sidebar(self, show=True):
+        if show:
+            self.sidebar.pack(side="left", fill="y", before=self.main_container)
+        else:
+            self.sidebar.pack_forget()
 
 # =======================================================
 # Main
@@ -233,6 +235,14 @@ class GameBrain(ctk.CTk):
 
 if __name__ == "__main__":
 
+    # Force clear the username on startup BEFORE GameBrain initializes
+    # so the app always starts at the Login page.
+    from app.utils.settings_manager import SettingsManager
+    SettingsManager().set("username", "")
+
     app = GameBrain()
+    
+    # Hide sidebar initially since no user is logged in
+    app.toggle_sidebar(False)
 
     app.mainloop()

@@ -70,8 +70,10 @@ class DQNAgent:
             lr=learning_rate
         )
 
-        # Save folder
-        self.model_folder = "saved_models"
+        # Save folder based on user profile
+        from app.utils.settings_manager import SettingsManager
+        username = SettingsManager().get("username", "Player1")
+        self.model_folder = os.path.join("saved_models", username)
         os.makedirs(self.model_folder, exist_ok=True)
 
         print("Agent Ready")

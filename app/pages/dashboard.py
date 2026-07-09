@@ -33,7 +33,8 @@ class DashboardView(ctk.CTkFrame):
         self.create_ui()
 
     def load_training_data(self):
-        log_file = f"training_logs/training_log_{self.game_id}.csv"
+        username = SettingsManager().get("username", "Player1")
+        log_file = os.path.join("training_logs", username, f"training_log_{self.game_id}.csv")
 
         self.best_reward = 0
         self.total_episodes = 0
@@ -65,7 +66,8 @@ class DashboardView(ctk.CTkFrame):
         self.average_reward_value.configure(text=str(self.average_reward))
         self.loss_value.configure(text=str(self.last_loss))
 
-        model = f"saved_models/best_dqn_model_{self.game_id}.pth"
+        username = SettingsManager().get("username", "Player1")
+        model = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.pth")
 
         if os.path.exists(model):
             self.status_label.configure(text="✅ Trained Model Available", text_color=("#006400", "lightgreen"))
@@ -88,27 +90,23 @@ class DashboardView(ctk.CTkFrame):
         fig = Figure(figsize=(10, 4), dpi=100, facecolor='none')
         
         ax1 = fig.add_subplot(121)
-        ax1.plot(self.df["Episode"], self.df["Reward"], color="#10B981", alpha=0.5, label="Reward")
-        window = min(50, len(self.df))
-        if window > 0:
-            ma = self.df["Reward"].rolling(window=window).mean()
-            ax1.plot(self.df["Episode"], ma, color="#059669", linewidth=2, label=f"{window}-Ep MA")
+        ax1.plot(self.df["Episode"], self.df["Reward"], color="#10B981", linewidth=2)
         
-        ax1.set_title("Reward Progression", color="gray")
+        ax1.set_title("Reward Progression", color="white", pad=15)
         ax1.set_xlabel("Episode", color="gray")
         ax1.set_ylabel("Reward", color="gray")
         ax1.tick_params(colors="gray")
-        ax1.legend(loc="upper left")
-        ax1.grid(color="gray", linestyle="--", linewidth=0.5, alpha=0.3)
+        ax1.spines['top'].set_visible(False)
+        ax1.spines['right'].set_visible(False)
 
         ax2 = fig.add_subplot(122)
-        ax2.plot(self.df["Episode"], self.df["Loss"], color="#EF4444", alpha=0.6)
-        ax2.set_title("Loss Minimization", color="gray")
+        ax2.plot(self.df["Episode"], self.df["Loss"], color="#EF4444", linewidth=2)
+        ax2.set_title("Loss Minimization", color="white", pad=15)
         ax2.set_xlabel("Episode", color="gray")
         ax2.set_ylabel("Loss", color="gray")
         ax2.tick_params(colors="gray")
-        ax2.grid(color="gray", linestyle="--", linewidth=0.5, alpha=0.3)
-        ax2.set_yscale("log")
+        ax2.spines['top'].set_visible(False)
+        ax2.spines['right'].set_visible(False)
 
         fig.tight_layout()
 
@@ -215,6 +213,10 @@ class DashboardPage(ctk.CTkFrame):
 
         self.build_menu_view()
 
+    def on_show(self):
+        # Reset to the menu view so that if they select a game again, it loads data for the current user
+        self.show_menu()
+
     def build_menu_view(self):
         title = ctk.CTkLabel(
             self.scroll_canvas,
@@ -244,11 +246,24 @@ class DashboardPage(ctk.CTkFrame):
             left = ctk.CTkFrame(card, fg_color="transparent")
             left.pack(side="left", padx=25, pady=20)
 
+            title_frame = ctk.CTkFrame(left, fg_color="transparent")
+            title_frame.pack(anchor="w")
+            
+            emoji, rest_of_title = info["name"].split(" ", 1)
+            
             ctk.CTkLabel(
-                left,
-                text=info["name"],
-                font=("Arial", 28, "bold")
-            ).pack(anchor="w")
+                title_frame,
+                text=emoji + " ",
+                font=("Arial", 28, "bold"),
+                text_color=info.get("title_color", "white")
+            ).pack(side="left")
+
+            ctk.CTkLabel(
+                title_frame,
+                text=rest_of_title,
+                font=("Arial", 28, "bold"),
+                text_color="white"
+            ).pack(side="left")
 
             ctk.CTkLabel(
                 left,

@@ -13,7 +13,7 @@ class PingPongEnv:
         self.paddle_w = 10
         self.ball_size = 10
 
-        if render:
+        if render or render_callback is not None:
             if not pygame.get_init():
                 pygame.init()
             if render_callback is None:
@@ -99,7 +99,7 @@ class PingPongEnv:
         if self.frame_iteration > 1000:
             done = True
 
-        if self.render_game:
+        if self.render_game or self.render_callback is not None:
             self.render()
 
         return self.get_state(), reward, done, self.score
@@ -108,7 +108,8 @@ class PingPongEnv:
         self.display.fill((0, 0, 0))
         pygame.draw.rect(self.display, (255, 255, 255), (10, self.paddle_y, self.paddle_w, self.paddle_h))
         pygame.draw.rect(self.display, (255, 255, 255), (self.width - 20, self.opp_y, self.paddle_w, self.paddle_h))
-        pygame.draw.rect(self.display, (255, 255, 255), (self.ball_x, self.ball_y, self.ball_size, self.ball_size))
+        ball_center = (int(self.ball_x + self.ball_size / 2), int(self.ball_y + self.ball_size / 2))
+        pygame.draw.circle(self.display, (255, 255, 255), ball_center, int(self.ball_size / 2))
         
         if self.render_callback:
             self.render_callback(self.display)
@@ -116,3 +117,6 @@ class PingPongEnv:
             
         pygame.display.flip()
         self.clock.tick(30)
+
+    def close(self):
+        pass

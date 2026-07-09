@@ -23,7 +23,11 @@ class LeaderboardManager:
     }
 
     def __new__(cls, game_id="snake"):
-        if game_id not in cls._instances:
+        from app.utils.settings_manager import SettingsManager
+        username = SettingsManager().get("username", "Player1")
+        key = (username, game_id)
+        
+        if key not in cls._instances:
             instance = super(LeaderboardManager, cls).__new__(cls)
             instance.game_id = game_id
             instance.leaderboard_file = os.path.abspath(
@@ -31,18 +35,22 @@ class LeaderboardManager:
                     os.path.dirname(__file__),
                     "..",
                     "..",
-                    "logs",
+                    "saved_models",
+                    username,
                     f"leaderboard_{game_id}.json"
                 )
             )
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(instance.leaderboard_file), exist_ok=True)
             instance.load()
-            cls._instances[game_id] = instance
-        return cls._instances[game_id]
+            cls._instances[key] = instance
+        return cls._instances[key]
 
     def load(self):
+        import copy
         os.makedirs(os.path.dirname(self.leaderboard_file), exist_ok=True)
         if not os.path.exists(self.leaderboard_file):
-            self.data = self.DEFAULT_DATA.copy()
+            self.data = copy.deepcopy(self.DEFAULT_DATA)
             self.save()
         else:
             try:
@@ -119,9 +127,11 @@ class LeaderboardManager:
         return self.data
 
     @classmethod
-    def get_training_progress(cls, game_id, target=1000):
+    def get_training_progress(cls, game_id, target=500):
+        from app.utils.settings_manager import SettingsManager
+        username = SettingsManager().get("username", "Player1")
         log_file = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), "..", "..", "training_logs", f"training_log_{game_id}.csv"
+            os.path.dirname(__file__), "..", "..", "training_logs", username, f"training_log_{game_id}.csv"
         ))
         if not os.path.exists(log_file):
             return 0.0

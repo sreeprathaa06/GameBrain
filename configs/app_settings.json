@@ -2,15 +2,15 @@
     "theme": "dark",
     "accent_color": "orange",
     "training_speed": 30,
-    "fps": 8,
+    "fps": 24,
     "graph_refresh_rate": 20,
     "game_speed": "Normal",
     "model_dir": "saved_models",
     "gpu_toggle": true,
     "active_model": "best_dqn_model.pth",
     "window_scaling": "100%",
-    "active_game": "flappy_bird",
-    "username": "",
+    "active_game": "ping_pong",
+    "username": "Sree",
     "age": "",
-    "experience": "Intermediate"
+    "experience": "Beginner"
 }

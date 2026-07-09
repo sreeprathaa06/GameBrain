@@ -18,7 +18,8 @@ from rl.dqn.agent import DQNAgent
 
 GAME_REGISTRY = {
     "snake": {
-        "name": "🐍 Snake AI Arena",
+        "name": "🐉 Snake AI Arena",
+        "title_color": "#10B981", # Green
         "desc": "Deep Q-Learning RL Environment",
         "algo": "DQN Network",
         "actions": "4 discrete directions",
@@ -28,7 +29,8 @@ GAME_REGISTRY = {
         "action_size": 4
     },
     "ping_pong": {
-        "name": "🏓 Ping Pong Duel",
+        "name": "🎾 Ping Pong Duel",
+        "title_color": "#F43F5E", # Red/Pink
         "desc": "Fast-paced physics paddle game",
         "algo": "DQN Network",
         "actions": "2 continuous/discrete",
@@ -38,7 +40,8 @@ GAME_REGISTRY = {
         "action_size": 3
     },
     "flappy_bird": {
-        "name": "🐦 Flappy Bird Clone",
+        "name": "🦅 Flappy Bird Clone",
+        "title_color": "#FBBF24", # Yellow
         "desc": "Gravity-defying bird survival",
         "algo": "DQN Network",
         "actions": "Jump / Do Nothing",
@@ -54,6 +57,8 @@ class PlayPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="#1B1B1B")
         self.settings = SettingsManager()
         self.current_view = None
+        self.previews = []
+        self.preview_tick_id = None
 
         self.menu_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.menu_frame.pack(fill="both", expand=True)
@@ -92,11 +97,24 @@ class PlayPage(ctk.CTkFrame):
             left = ctk.CTkFrame(card, fg_color="transparent")
             left.pack(side="left", padx=25, pady=20)
 
+            title_frame = ctk.CTkFrame(left, fg_color="transparent")
+            title_frame.pack(anchor="w")
+            
+            emoji, rest_of_title = info["name"].split(" ", 1)
+            
             ctk.CTkLabel(
-                left,
-                text=info["name"],
-                font=("Arial", 28, "bold")
-            ).pack(anchor="w")
+                title_frame,
+                text=emoji + " ",
+                font=("Arial", 28, "bold"),
+                text_color=info.get("title_color", "white")
+            ).pack(side="left")
+
+            ctk.CTkLabel(
+                title_frame,
+                text=rest_of_title,
+                font=("Arial", 28, "bold"),
+                text_color="white"
+            ).pack(side="left")
 
             ctk.CTkLabel(
                 left,
@@ -110,12 +128,28 @@ class PlayPage(ctk.CTkFrame):
             self.stat_pill(stats, "Algorithm", info["algo"])
             self.stat_pill(stats, "Actions", info["actions"])
 
+            preview_frame = ctk.CTkFrame(card, fg_color="transparent")
+            preview_frame.pack(side="left", expand=True, padx=10, pady=10)
+
+            accent = self.settings.get("accent_color", "blue")
+            if info["is_pygame"]:
+                viewport = PygameViewport(preview_frame, width=200, height=200)
+                env = info["env_class"](render=True, render_callback=viewport.draw_surface)
+            else:
+                viewport = GameViewport(preview_frame, grid_width=20, grid_height=20, cell_size=12, accent_color=accent)
+                env = info["env_class"]()
+
+            viewport.pack()
+            self.previews.append({"env": env, "viewport": viewport, "is_pygame": info["is_pygame"], "game_id": game_id})
+
             right = ctk.CTkFrame(card, fg_color="transparent")
             right.pack(side="right", padx=25, pady=20)
 
             self.btn(right, "👤 Human Play", "#10B981", lambda gid=game_id: self.show_view("human", gid))
             self.btn(right, "⚔ Human vs AI", "#8B5CF6", lambda gid=game_id: self.show_view("human_vs_ai", gid))
             self.btn(right, "🧠 Train Models", "#F97316", lambda gid=game_id: self.goto_training(gid))
+
+        self.start_preview_loop()
 
     def stat_pill(self, parent, title, value):
         frame = ctk.CTkFrame(parent, fg_color="#2E2E2E", corner_radius=10, border_width=1, border_color="#3E3E3E")
@@ -137,6 +171,7 @@ class PlayPage(ctk.CTkFrame):
         ).pack(pady=6)
 
     def show_view(self, mode, game_id):
+        self.stop_preview_loop()
         self.settings.set("active_game", game_id)
         
         self.menu_frame.pack_forget()
@@ -158,6 +193,69 @@ class PlayPage(ctk.CTkFrame):
             self.current_view.destroy()
             self.current_view = None
         self.menu_frame.pack(fill="both", expand=True)
+        self.start_preview_loop()
+
+    def start_preview_loop(self):
+        if self.preview_tick_id is not None:
+            self.after_cancel(self.preview_tick_id)
+        self.menu_tick()
+        
+    def stop_preview_loop(self):
+        if self.preview_tick_id is not None:
+            self.after_cancel(self.preview_tick_id)
+            self.preview_tick_id = None
+
+    def menu_tick(self):
+        if self.current_view is not None:
+            return
+            
+        import random
+        
+        for p in self.previews:
+            env = p["env"]
+            viewport = p["viewport"]
+            is_pygame = p["is_pygame"]
+            game_id = p.get("game_id", "")
+            
+            # Simple heuristic "bots" to simulate video gameplay
+            action = 0
+            if game_id == "snake":
+                try:
+                    hx, hy = env.snake.head()
+                    fx, fy = env.food.get_position()
+                    if hx < fx and env.snake.direction != (-1, 0): action = 3 # Right
+                    elif hx > fx and env.snake.direction != (1, 0): action = 2 # Left
+                    elif hy < fy and env.snake.direction != (0, -1): action = 1 # Down
+                    elif hy > fy and env.snake.direction != (0, 1): action = 0 # Up
+                    else: action = random.choice([0, 1, 2, 3])
+                except:
+                    action = random.choice([0, 1, 2, 3])
+            elif game_id == "ping_pong":
+                try:
+                    if env.paddle_y + env.paddle_h/2 < env.ball_y: action = 2 # Down
+                    elif env.paddle_y + env.paddle_h/2 > env.ball_y: action = 1 # Up
+                except:
+                    pass
+            elif game_id == "flappy_bird":
+                try:
+                    # Flap if dropping below middle
+                    if env.bird_y > env.height / 2: action = 1
+                except:
+                    pass
+            
+            try:
+                _, _, done, _ = env.step(action)
+                if done:
+                    env.reset()
+                
+                if is_pygame:
+                    env.render()
+                else:
+                    viewport.draw_game(env.snake.get_body(), env.food.get_position(), env.score)
+            except Exception:
+                pass
+                
+        self.preview_tick_id = self.after(50, self.menu_tick)
 
     def goto_training(self, game_id):
         self.settings.set("active_game", game_id)
@@ -257,12 +355,12 @@ class HumanPlayView(ctk.CTkFrame):
     def on_key_press(self, event):
         key = event.keysym.lower()
         
-        if self.game_info["name"] == "🏓 Ping Pong Duel":
+        if self.game_info["name"] == "🎾 Ping Pong Duel":
             if key in ("w", "up"):
                 self.controller.action = 1
             elif key in ("s", "down"):
                 self.controller.action = 2
-        elif self.game_info["name"] == "🐦 Flappy Bird Clone":
+        elif self.game_info["name"] == "🦅 Flappy Bird Clone":
             if key in ("w", "up", "space"):
                 self.controller.action = 1
         else: # Snake
@@ -275,7 +373,7 @@ class HumanPlayView(ctk.CTkFrame):
             elif key in ("right", "d"):
                 self.controller.action = 3
 
-        if key == "p" or (key == "space" and self.game_info["name"] != "🐦 Flappy Bird Clone"):
+        if key == "p" or (key == "space" and self.game_info["name"] != "🦅 Flappy Bird Clone"):
             self.toggle_play()
         elif key == "r":
             self.restart()
@@ -284,7 +382,7 @@ class HumanPlayView(ctk.CTkFrame):
             
     def on_key_release(self, event):
         key = event.keysym.lower()
-        if self.game_info["name"] in ("🏓 Ping Pong Duel", "🐦 Flappy Bird Clone"):
+        if self.game_info["name"] in ("🎾 Ping Pong Duel", "🦅 Flappy Bird Clone"):
             if key in ("w", "s", "up", "down", "space"):
                 self.controller.action = 0
 
@@ -357,9 +455,9 @@ class HumanPlayView(ctk.CTkFrame):
             self.draw_current_state(f"GAME OVER\nScore: {self.score}")
             return
 
-        if self.game_info["name"] == "🏓 Ping Pong Duel":
+        if self.game_info["name"] == "🎾 Ping Pong Duel":
             delay_ms = 16 # ~60fps
-        elif self.game_info["name"] == "🐦 Flappy Bird Clone":
+        elif self.game_info["name"] == "🦅 Flappy Bird Clone":
             delay_ms = 33 # ~30fps
         else:
             base_fps = 10 if self.is_pygame else 6
@@ -674,12 +772,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
     def on_key_press(self, event):
         key = event.keysym.lower()
         
-        if self.game_info["name"] == "🏓 Ping Pong Duel":
+        if self.game_info["name"] == "🎾 Ping Pong Duel":
             if key in ("w", "up"):
                 self.h_controller.action = 1
             elif key in ("s", "down"):
                 self.h_controller.action = 2
-        elif self.game_info["name"] == "🐦 Flappy Bird Clone":
+        elif self.game_info["name"] == "🦅 Flappy Bird Clone":
             if key in ("w", "up", "space"):
                 self.h_controller.action = 1
         else: # Snake
@@ -692,12 +790,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
             elif key in ("right", "d"):
                 self.h_controller.action = 3
 
-        if key == "p" or (key == "space" and self.game_info["name"] != "🐦 Flappy Bird Clone"):
+        if key == "p" or (key == "space" and self.game_info["name"] != "🦅 Flappy Bird Clone"):
             self.toggle_play()
             
     def on_key_release(self, event):
         key = event.keysym.lower()
-        if self.game_info["name"] in ("🏓 Ping Pong Duel", "🐦 Flappy Bird Clone"):
+        if self.game_info["name"] in ("🎾 Ping Pong Duel", "🦅 Flappy Bird Clone"):
             if key in ("w", "s", "up", "down", "space"):
                 self.h_controller.action = 0
 

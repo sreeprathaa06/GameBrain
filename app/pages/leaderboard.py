@@ -52,7 +52,7 @@ class LeaderboardView(ctk.CTkFrame):
             ("👤 Highest Human Score", str(data.get("highest_human_score", 0)), ("#005B96", "cyan")),
             ("🤖 Highest AI Score", str(data.get("highest_ai_score", 0)), ("purple", "#B39DDB")),
             ("📈 Best Training Reward", f"{data.get('best_training_reward', 0.0):.2f}", ("#006400", "green")),
-            ("⏱ Fastest Training (1000 ep)", f"{data.get('fastest_training_time_sec', 0.0):.1f}s" if data.get('fastest_training_time_sec', 0.0) > 0 else "N/A", ("#D97706", "orange")),
+            ("⏱ Fastest Training (500 ep)", f"{data.get('fastest_training_time_sec', 0.0):.1f}s" if data.get('fastest_training_time_sec', 0.0) > 0 else "N/A", ("#D97706", "orange")),
             ("🐍 Longest Survival", f"{data.get('longest_survival_steps', 0)} steps", ("#1E3A8A", "blue")),
             ("🍎 Total Apples/Score Harvested", str(data.get("most_apples_single_game", 0)), ("#005B96", "cyan"))
         ]
@@ -175,6 +175,10 @@ class LeaderboardPage(ctk.CTkFrame):
 
         self.build_menu_view()
 
+    def on_show(self):
+        # Reset to the menu view so that if they select a game again, it loads data for the current user
+        self.show_menu()
+
     def build_menu_view(self):
         title = ctk.CTkLabel(
             self.scroll_canvas,
@@ -204,11 +208,24 @@ class LeaderboardPage(ctk.CTkFrame):
             left = ctk.CTkFrame(card, fg_color="transparent")
             left.pack(side="left", padx=25, pady=20)
 
+            title_frame = ctk.CTkFrame(left, fg_color="transparent")
+            title_frame.pack(anchor="w")
+            
+            emoji, rest_of_title = info["name"].split(" ", 1)
+            
             ctk.CTkLabel(
-                left,
-                text=info["name"],
-                font=("Arial", 28, "bold")
-            ).pack(anchor="w")
+                title_frame,
+                text=emoji + " ",
+                font=("Arial", 28, "bold"),
+                text_color=info.get("title_color", "white")
+            ).pack(side="left")
+
+            ctk.CTkLabel(
+                title_frame,
+                text=rest_of_title,
+                font=("Arial", 28, "bold"),
+                text_color="white"
+            ).pack(side="left")
 
             ctk.CTkLabel(
                 left,

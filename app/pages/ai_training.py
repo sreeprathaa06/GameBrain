@@ -54,9 +54,55 @@ class AITrainingPage(ctk.CTkFrame):
         
         self.game_info = GAME_REGISTRY["snake"]
         self.game_id = "snake"
+        self.current_username = self.settings.get("username", "Player1")
         
         self.build_ui()
         self.update_active_game()
+
+    def on_show(self):
+        new_username = self.settings.get("username", "Player1")
+        new_game_id = self.settings.get("active_game", "snake")
+        
+        if self.current_username != new_username or self.game_id != new_game_id:
+            if self.training:
+                self.stop_training()
+                
+            self.current_username = new_username
+            self.game_id = new_game_id
+            
+            # Clear stored data
+            self.episodes_list.clear()
+            self.rewards_list.clear()
+            self.losses_list.clear()
+            self.epsilons_list.clear()
+            self.speeds_list.clear()
+            self.best_episode_steps.clear()
+            self.best_reward = -99999.0
+            
+            # Clear plots
+            self.ax_reward.clear(); self.style_axes(self.ax_reward, "Episode", "Score / Reward")
+            self.ax_loss.clear(); self.style_axes(self.ax_loss, "Episode", "MSE Loss")
+            self.ax_epsilon.clear(); self.style_axes(self.ax_epsilon, "Episode", "Epsilon Value")
+            self.ax_speed.clear(); self.style_axes(self.ax_speed, "Episode", "Speed (steps/sec)")
+            
+            self.canvas_reward.draw_idle()
+            self.canvas_loss.draw_idle()
+            self.canvas_epsilon.draw_idle()
+            self.canvas_speed.draw_idle()
+
+            # Reset HUD labels
+            self.ep_lbl.configure(text="0 / 500")
+            self.rew_lbl.configure(text="0.0")
+            self.best_rew_lbl.configure(text="0.0")
+            self.loss_lbl.configure(text="0.000")
+            self.eps_lbl.configure(text="1.00")
+            self.speed_lbl.configure(text="0 steps/s")
+            self.mem_lbl.configure(text="0 MB")
+            self.time_lbl.configure(text="0s")
+            
+            self.log_txt.delete("1.0", "end")
+            
+            self.update_active_game()
 
     def update_active_game(self):
         self.game_id = self.settings.get("active_game", "snake")
@@ -67,7 +113,8 @@ class AITrainingPage(ctk.CTkFrame):
         
         # update UI
         if hasattr(self, 'title_lbl'):
-            self.title_lbl.configure(text=f"🧠 Training Control Center - {self.game_info['name']}")
+            username = self.settings.get("username", "Player1")
+            self.title_lbl.configure(text=f"🧠 {username}'s AI Center - {self.game_info['name']}")
         
         active_model = f"best_dqn_model_{self.game_id}.pth"
         if hasattr(self, 'model_lbl'):
@@ -121,7 +168,7 @@ class AITrainingPage(ctk.CTkFrame):
         hud = ctk.CTkFrame(left_side, fg_color="#202020", corner_radius=12, border_width=1, border_color="#303030")
         hud.pack(fill="x", pady=6)
 
-        self.ep_lbl = self.hud_cell(hud, "Episode", "0 / 1000", 0, 0)
+        self.ep_lbl = self.hud_cell(hud, "Episode", "0 / 500", 0, 0)
         self.rew_lbl = self.hud_cell(hud, "Reward", "0.0", 0, 1)
         self.best_rew_lbl = self.hud_cell(hud, "Best Reward", "0.0", 0, 2)
         self.loss_lbl = self.hud_cell(hud, "Loss", "0.000", 0, 3)
@@ -253,9 +300,10 @@ class AITrainingPage(ctk.CTkFrame):
         ax.xaxis.label.set_size(9)
         ax.yaxis.label.set_color('#CCCCCC')
         ax.yaxis.label.set_size(9)
-        for spine in ax.spines.values():
-            spine.set_color('#3A3A3A')
-        ax.grid(True, color='#2E2E2E', linestyle='--')
+        ax.spines['bottom'].set_color('#3A3A3A')
+        ax.spines['left'].set_color('#3A3A3A')
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
 
     # Controls Logic
     def change_speed(self, val):
@@ -321,7 +369,33 @@ class AITrainingPage(ctk.CTkFrame):
 
     def reset_training(self):
         if self.training:
+            messagebox.showwarning("Warning", "Cannot reset while training is active.")
             return
+
+        confirm = messagebox.askyesno("Reset AI", f"Are you sure you want to completely wipe {self.settings.get('username', 'Player1')}'s {self.game_info['name']} AI? This cannot be undone.")
+        if not confirm:
+            return
+
+        username = self.settings.get("username", "Player1")
+        model_path = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.pth")
+        meta_path = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.json")
+        log_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "..", "..", "training_logs", username, f"training_log_{self.game_id}.csv"
+        ))
+        leaderboard_path = os.path.join("saved_models", username, f"leaderboard_{self.game_id}.json")
+        
+        try:
+            if os.path.exists(model_path):
+                os.remove(model_path)
+            if os.path.exists(meta_path):
+                os.remove(meta_path)
+            if os.path.exists(log_path):
+                os.remove(log_path)
+            if os.path.exists(leaderboard_path):
+                os.remove(leaderboard_path)
+            self.log_txt.insert("end", f"🗑️ Wiped {username}'s AI model and logs for {self.game_info['name']} (0% Trained).\n")
+        except Exception as e:
+            self.log_txt.insert("end", f"❌ Error deleting model: {e}\n")
         self.episodes_list.clear()
         self.rewards_list.clear()
         self.losses_list.clear()
@@ -340,7 +414,7 @@ class AITrainingPage(ctk.CTkFrame):
         self.canvas_epsilon.draw_idle()
         self.canvas_speed.draw_idle()
 
-        self.ep_lbl.configure(text="0 / 1000")
+        self.ep_lbl.configure(text="0 / 500")
         self.rew_lbl.configure(text="0.0")
         self.best_rew_lbl.configure(text="0.0")
         self.loss_lbl.configure(text="0.000")
@@ -367,7 +441,7 @@ class AITrainingPage(ctk.CTkFrame):
                 lr=lr,
                 gamma=gamma,
                 batch_size=batch_size,
-                episodes=1000
+                episodes=500
             )
             self.after(0, lambda: self.training_ended("✅ Complete", "lightgreen"))
         except Exception as e:
@@ -456,13 +530,7 @@ class AITrainingPage(ctk.CTkFrame):
         # 1. Rewards
         self.ax_reward.clear()
         self.style_axes(self.ax_reward, "Episode", "Score / Reward")
-        self.ax_reward.plot(self.episodes_list, self.rewards_list, color='#10B981', label='Reward', alpha=0.4)
-        # Moving average
-        window = min(50, len(self.rewards_list))
-        if window > 5:
-            ma = np.convolve(self.rewards_list, np.ones(window)/window, mode='valid')
-            self.ax_reward.plot(self.episodes_list[window-1:], ma, color='#059669', label='Moving Avg (50)', linewidth=2)
-        self.ax_reward.legend(facecolor='#202020', labelcolor='#CCCCCC', edgecolor='#404040')
+        self.ax_reward.plot(self.episodes_list, self.rewards_list, color='#10B981', linewidth=2)
         self.canvas_reward.draw_idle()
 
         # 2. Loss

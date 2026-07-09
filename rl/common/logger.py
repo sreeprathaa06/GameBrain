@@ -25,10 +25,14 @@ class TrainingLogger:
             )
         )
 
+        from app.utils.settings_manager import SettingsManager
+        username = SettingsManager().get("username", "Player1")
+
         # Logs Folder
         self.logs_folder = os.path.join(
             self.project_root,
-            "training_logs"
+            "training_logs",
+            username
         )
 
         os.makedirs(

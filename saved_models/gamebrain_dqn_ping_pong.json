@@ -1,7 +1,7 @@
 {
     "filename": "gamebrain_dqn_ping_pong.pth",
-    "training_date": "2026-07-09 08:06",
-    "best_reward": 0,
+    "training_date": "2026-07-09 18:36",
+    "best_reward": 70,
     "episode": 1000,
     "model_size_kb": 72.83,
     "state_size": 6,

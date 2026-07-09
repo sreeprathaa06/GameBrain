@@ -28,7 +28,7 @@ from .agent import DQNAgent
 # SETTINGS
 # =====================================================
 
-EPISODES = 1000
+EPISODES = 500
 TARGET_UPDATE = 5
 
 # 0 = Fastest
@@ -55,7 +55,7 @@ def train(
     lr=0.001,
     gamma=0.99,
     batch_size=64,
-    episodes=1000
+    episodes=500
 ):
     import time
 

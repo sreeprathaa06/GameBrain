@@ -1,0 +1,12 @@
+{
+    "filename": "best_dqn_model_flappy_bird.pth",
+    "training_date": "2026-07-09 18:37",
+    "best_reward": -5.4,
+    "episode": 6,
+    "model_size_kb": 71.37,
+    "state_size": 4,
+    "action_size": 2,
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "batch_size": 64
+}

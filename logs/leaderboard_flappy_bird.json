@@ -1,11 +1,23 @@
 {
     "highest_human_score": 0,
     "highest_ai_score": 0,
-    "longest_survival_steps": 28,
+    "longest_survival_steps": 370,
     "most_apples_single_game": 0,
     "best_training_reward": 0.0,
     "fastest_training_time_sec": 0.0,
     "recent_sessions": [
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 159,
+            "date": "2026-07-09 18:43"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 370,
+            "date": "2026-07-09 13:40"
+        },
         {
             "mode": "Human vs AI",
             "score": 0,

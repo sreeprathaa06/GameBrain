@@ -18,7 +18,7 @@ class FlappyBirdEnv:
         self.pipe_gap = 120
         self.pipe_vel_x = -4
 
-        if render:
+        if render or render_callback is not None:
             if not pygame.get_init():
                 pygame.init()
             if render_callback is None:
@@ -98,14 +98,33 @@ class FlappyBirdEnv:
                 reward = 10
                 self.score += 1
 
-        if self.render_game:
+        if self.render_game or self.render_callback is not None:
             self.render()
 
         return self.get_state(), reward, done, self.score
 
     def render(self):
         self.display.fill((135, 206, 250))
-        pygame.draw.rect(self.display, (255, 255, 0), (self.bird_x, self.bird_y, self.bird_size, self.bird_size))
+        center = (int(self.bird_x + self.bird_size / 2), int(self.bird_y + self.bird_size / 2))
+        radius = int(self.bird_size / 2)
+        
+        # Body (Yellow)
+        pygame.draw.circle(self.display, (255, 200, 0), center, radius)
+        
+        # Eye (White)
+        eye_center = (int(center[0] + radius / 2), int(center[1] - radius / 3))
+        pygame.draw.circle(self.display, (255, 255, 255), eye_center, radius // 2)
+        
+        # Pupil (Black)
+        pygame.draw.circle(self.display, (0, 0, 0), eye_center, radius // 4)
+        
+        # Beak (Orange)
+        beak_points = [
+            (center[0] + radius - 2, center[1]),
+            (center[0] + radius + 8, center[1] + 2),
+            (center[0] + radius - 2, center[1] + 6)
+        ]
+        pygame.draw.polygon(self.display, (255, 140, 0), beak_points)
         
         for p in self.pipes:
             # Top pipe
@@ -119,3 +138,6 @@ class FlappyBirdEnv:
 
         pygame.display.flip()
         self.clock.tick(30)
+
+    def close(self):
+        pass

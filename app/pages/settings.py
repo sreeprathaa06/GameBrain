@@ -27,7 +27,6 @@ class SettingsPage(ctk.CTkFrame):
 
         # 3. Environment & Directories Section
         self.create_env_card()
-
     def create_appearance_card(self):
         card = ctk.CTkFrame(self.scroll, fg_color=("gray95", "#202020"), corner_radius=15, border_width=1, border_color=("gray85", "#303030"))
         card.pack(fill="x", pady=10, padx=5)
