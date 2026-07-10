@@ -9,6 +9,7 @@ Dashboard
 import os
 import pandas as pd
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
@@ -72,7 +73,8 @@ class DashboardView(ctk.CTkFrame):
         if os.path.exists(model):
             self.status_label.configure(text="✅ Trained Model Available", text_color=("#006400", "lightgreen"))
         else:
-            self.status_label.configure(text="❌ No Trained Model", text_color=("#8B0000", "red"))
+            close_icon = get_icon("close", size=(16, 16))
+            self.status_label.configure(text=" No Trained Model", image=close_icon, text_color=("#8B0000", "red"))
             
         self.update_graphs()
 
@@ -218,12 +220,16 @@ class DashboardPage(ctk.CTkFrame):
         self.show_menu()
 
     def build_menu_view(self):
+        header_choose = ctk.CTkFrame(self.scroll_canvas, fg_color="transparent")
+        header_choose.pack(pady=(20, 5))
+        dashboard_icon_title = get_icon("dashboard_color", size=(28, 28))
+        ctk.CTkLabel(header_choose, text="" if dashboard_icon_title else "📊 ", image=dashboard_icon_title).pack(side="left", padx=(0, 5))
         title = ctk.CTkLabel(
-            self.scroll_canvas,
-            text="📊 Choose Dashboard",
+            header_choose,
+            text="Choose Dashboard",
             font=("Arial", 34, "bold")
         )
-        title.pack(pady=(20, 5))
+        title.pack(side="left")
 
         subtitle = ctk.CTkLabel(
             self.scroll_canvas,
@@ -275,9 +281,11 @@ class DashboardPage(ctk.CTkFrame):
             right = ctk.CTkFrame(card, fg_color="transparent")
             right.pack(side="right", padx=25, pady=20)
 
+            dashboard_icon = get_icon("dashboard_color", size=(20, 20))
             ctk.CTkButton(
                 right,
-                text="📈 View Dashboard",
+                text=" View Dashboard",
+                image=dashboard_icon,
                 width=180,
                 height=45,
                 fg_color="#10B981",

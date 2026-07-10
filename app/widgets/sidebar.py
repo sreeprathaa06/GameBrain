@@ -9,7 +9,7 @@ Author : Team GameBrain
 """
 
 import customtkinter as ctk
-
+from app.utils.icon_loader import get_icon
 
 class Sidebar(ctk.CTkFrame):
 
@@ -32,12 +32,15 @@ class Sidebar(ctk.CTkFrame):
         title_frame = ctk.CTkFrame(self, fg_color="transparent")
         title_frame.pack(pady=(25, 40))
 
-        ctk.CTkLabel(
+        # Title Logo
+        title_icon = get_icon("app_icon", size=(32, 32))
+        self.title_label = ctk.CTkLabel(
             title_frame,
-            text="🎮 ",
+            text="" if title_icon else "🎮 ",
+            image=title_icon,
             font=("Arial", 24, "bold"),
             text_color="#00E5FF"
-        ).pack(side="left")
+        ).pack(side="left", padx=(0, 5))
 
         ctk.CTkLabel(
             title_frame,
@@ -47,23 +50,24 @@ class Sidebar(ctk.CTkFrame):
         ).pack(side="left")
 
         menu_items = [
-            ("🏠", " Home", "home", "#4ADE80"),
-            ("🎮", " Play Games", "play", "#60A5FA"),
-            ("🧠", " AI Academy", "academy", "#F472B6"),
-            ("📊", " Dashboard", "dashboard", "#FBBF24"),
-            ("🏆", " Leaderboard", "leaderboard", "#FB923C"),
-            ("⚙", " Settings", "settings", "#94A3B8")
+            ("home_color", " Home", "home", "#4ADE80"),
+            ("game_color", " Play Games", "play", "#60A5FA"),
+            ("brain_color", " AI Academy", "academy", "#F472B6"),
+            ("dashboard_color", " Dashboard", "dashboard", "#FBBF24"),
+            ("trophy_color", " Leaderboard", "leaderboard", "#FB923C"),
+            ("settings_color", " Settings", "settings", "#94A3B8")
         ]
 
         self.buttons = {}
         self.active_page = "home"
 
-        for emoji, text, page, color in menu_items:
+        for icon_name, text, page, color in menu_items:
             btn = ctk.CTkFrame(self, fg_color="transparent", height=40, width=180, corner_radius=8)
             btn.pack_propagate(False)
             btn.pack(pady=8)
             
-            lbl_e = ctk.CTkLabel(btn, text=emoji, font=("Arial", 18), text_color=color)
+            icon_img = get_icon(icon_name, size=(24, 24))
+            lbl_e = ctk.CTkLabel(btn, text="" if icon_img else icon_name, image=icon_img, text_color=color)
             lbl_e.pack(side="left", padx=(15, 5))
             
             lbl_t = ctk.CTkLabel(btn, text=text, font=("Arial", 16, "bold"), text_color="white")
@@ -98,9 +102,11 @@ class Sidebar(ctk.CTkFrame):
             text="",
         ).pack(expand=True)
 
+        exit_icon = get_icon("close", size=(20, 20))
         exit_btn = ctk.CTkButton(
             self,
-            text="❌ Exit",
+            text=" Exit",
+            image=exit_icon,
             fg_color="#B22222",
             hover_color="#8B0000",
             command=self.master.destroy

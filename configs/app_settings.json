@@ -9,8 +9,8 @@
     "gpu_toggle": true,
     "active_model": "best_dqn_model.pth",
     "window_scaling": "100%",
-    "active_game": "ping_pong",
-    "username": "Sowmi",
+    "active_game": "snake",
+    "username": "",
     "age": "",
     "experience": "Beginner"
 }

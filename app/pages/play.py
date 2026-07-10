@@ -1,6 +1,7 @@
 import time
 import collections
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 import numpy as np
 import torch
 import pygame
@@ -69,12 +70,16 @@ class PlayPage(ctk.CTkFrame):
         self.build_menu_view()
 
     def build_menu_view(self):
+        header = ctk.CTkFrame(self.scroll_canvas, fg_color="transparent")
+        header.pack(pady=(20, 5))
+        game_icon = get_icon("game_color", size=(28, 28))
+        ctk.CTkLabel(header, text="" if game_icon else "🎮 ", image=game_icon).pack(side="left", padx=(0, 5))
         title = ctk.CTkLabel(
-            self.scroll_canvas,
-            text="🎮 Choose Play Mode",
+            header,
+            text="Choose Play Mode",
             font=("Arial", 34, "bold")
         )
-        title.pack(pady=(20, 5))
+        title.pack(side="left")
 
         subtitle = ctk.CTkLabel(
             self.scroll_canvas,
@@ -318,11 +323,14 @@ class HumanPlayView(ctk.CTkFrame):
         self.high_score_lbl = self.add_stat_row(stats_frame, "High Score", str(self.leaderboard.get_data().get("highest_human_score", 0)))
         self.steps_lbl = self.add_stat_row(stats_frame, "Time Alive", "0s")
 
-        self.start_btn = ctk.CTkButton(control_panel, text="▶ Start Game (P)", fg_color="#10B981", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
+        play_btn_icon = get_icon("play_btn", size=(16, 16))
+        self.start_btn = ctk.CTkButton(control_panel, text=" Start Game (P)", image=play_btn_icon, fg_color="#10B981", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
         self.start_btn.pack(fill="x", padx=15, pady=8)
 
-        ctk.CTkButton(control_panel, text="🔁 Restart (R)", fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
-        ctk.CTkButton(control_panel, text="❌ Exit to Menu (ESC)", fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
+        refresh_icon = get_icon("refresh_color", size=(16, 16))
+        ctk.CTkButton(control_panel, text=" Restart (R)", image=refresh_icon, fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
+        close_icon = get_icon("close", size=(16, 16))
+        ctk.CTkButton(control_panel, text=" Exit to Menu (ESC)", image=close_icon, fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
 
         self.bind_events()
         
@@ -397,10 +405,10 @@ class HumanPlayView(ctk.CTkFrame):
         else:
             self.paused = not self.paused
             if self.paused:
-                self.start_btn.configure(text="▶ Resume (P)", fg_color="#10B981")
+                self.start_btn.configure(text=" Resume (P)", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
                 self.draw_current_state("GAME PAUSED")
             else:
-                self.start_btn.configure(text="⏸ Pause (P)", fg_color="#F57C00")
+                self.start_btn.configure(text=" Pause (P)", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
                 self.start_time = time.time() - self.survival_steps
                 self.focus_set()
                 self.game_tick()
@@ -418,12 +426,12 @@ class HumanPlayView(ctk.CTkFrame):
         if not self.running:
             self.running = True
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause (P)", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause (P)", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.focus_set()
             self.game_tick()
         elif self.paused:
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause (P)", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause (P)", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.focus_set()
             self.game_tick()
 
@@ -447,7 +455,7 @@ class HumanPlayView(ctk.CTkFrame):
 
         if done:
             self.running = False
-            self.start_btn.configure(text="▶ Start Game (P)", fg_color="#10B981")
+            self.start_btn.configure(text=" Start Game (P)", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
             
             self.leaderboard.update_score("Human", self.score, self.survival_steps)
             self.high_score_lbl.configure(text=str(self.leaderboard.get_data().get("highest_human_score", 0)))
@@ -548,11 +556,14 @@ class AIPlayView(ctk.CTkFrame):
             lbl.pack(side="right")
             self.q_bars[act] = (bar, lbl)
 
-        self.start_btn = ctk.CTkButton(control_panel, text="▶ Run Autopilot", fg_color="#10B981", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
+        play_btn_icon = get_icon("play_btn", size=(16, 16))
+        self.start_btn = ctk.CTkButton(control_panel, text=" Run Autopilot", image=play_btn_icon, fg_color="#10B981", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
         self.start_btn.pack(fill="x", padx=15, pady=8)
 
-        ctk.CTkButton(control_panel, text="🔁 Restart Environment", fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
-        ctk.CTkButton(control_panel, text="❌ Close", fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
+        refresh_icon = get_icon("refresh_color", size=(16, 16))
+        ctk.CTkButton(control_panel, text=" Restart Environment", image=refresh_icon, fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
+        close_icon = get_icon("close", size=(16, 16))
+        ctk.CTkButton(control_panel, text=" Close", image=close_icon, fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
 
     def draw_current_state(self, overlay_text=None, ai_info=None):
         if self.is_pygame:
@@ -581,10 +592,10 @@ class AIPlayView(ctk.CTkFrame):
         else:
             self.paused = not self.paused
             if self.paused:
-                self.start_btn.configure(text="▶ Resume Autopilot", fg_color="#10B981")
+                self.start_btn.configure(text=" Resume Autopilot", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
                 self.draw_current_state("AUTOPILOT PAUSED")
             else:
-                self.start_btn.configure(text="⏸ Pause Autopilot", fg_color="#F57C00")
+                self.start_btn.configure(text=" Pause Autopilot", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
                 self.game_tick()
 
     def restart(self):
@@ -604,11 +615,11 @@ class AIPlayView(ctk.CTkFrame):
         if not self.running:
             self.running = True
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause Autopilot", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause Autopilot", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.game_tick()
         elif self.paused:
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause Autopilot", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause Autopilot", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.game_tick()
 
     def predict_action(self, state):
@@ -661,7 +672,7 @@ class AIPlayView(ctk.CTkFrame):
 
         if done:
             self.running = False
-            self.start_btn.configure(text="▶ Run Autopilot", fg_color="#10B981")
+            self.start_btn.configure(text=" Run Autopilot", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
             self.leaderboard.update_score("AI", score, self.survival_steps)
             self.draw_current_state(f"AI DIED\nScore: {score}")
             return
@@ -703,7 +714,11 @@ class HumanVsAIPlayView(ctk.CTkFrame):
 
         ai_panel = ctk.CTkFrame(self, fg_color="#202020", corner_radius=15, border_width=1, border_color="#303030")
         ai_panel.grid(row=0, column=2, sticky="nsew", padx=(5, 0), pady=10)
-        ctk.CTkLabel(ai_panel, text="🤖 AI AUTOPILOT", font=("Arial", 16, "bold"), text_color="#3B82F6").pack(pady=(10, 2))
+        robot_icon = get_icon("robot_color", size=(20, 20))
+        header_robot = ctk.CTkFrame(ai_panel, fg_color="transparent")
+        header_robot.pack(pady=(10, 2))
+        ctk.CTkLabel(header_robot, text="" if robot_icon else "🤖 ", image=robot_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_robot, text="AI AUTOPILOT", font=("Arial", 16, "bold"), text_color="#3B82F6").pack(side="left")
         
         # Add Training Progress Bar for AI
         progress = self.leaderboard.get_training_progress(self.game_id)
@@ -753,11 +768,14 @@ class HumanVsAIPlayView(ctk.CTkFrame):
         self.ai_score_lbl = ctk.CTkLabel(ai_score_row, text="0", font=("Arial", 16, "bold"))
         self.ai_score_lbl.pack(side="right")
 
-        self.start_btn = ctk.CTkButton(center_panel, text="🚀 Duel Game (P)", fg_color="#E11D48", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
+        rocket_icon = get_icon("rocket_color", size=(16, 16))
+        self.start_btn = ctk.CTkButton(center_panel, text=" Duel Game (P)", image=rocket_icon, fg_color="#E11D48", height=40, font=("Arial", 13, "bold"), command=self.toggle_play)
         self.start_btn.pack(fill="x", padx=15, pady=12)
 
-        ctk.CTkButton(center_panel, text="🔁 Restart Match", fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
-        ctk.CTkButton(center_panel, text="❌ Exit Duel", fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
+        refresh_icon = get_icon("refresh_color", size=(16, 16))
+        ctk.CTkButton(center_panel, text=" Restart Match", image=refresh_icon, fg_color="#1E3A8A", height=38, command=self.restart).pack(fill="x", padx=15, pady=4)
+        close_icon = get_icon("close", size=(16, 16))
+        ctk.CTkButton(center_panel, text=" Exit Duel", image=close_icon, fg_color="#D32F2F", height=38, command=self.exit).pack(fill="x", padx=15, pady=4)
 
         self.bind_events()
 
@@ -826,10 +844,10 @@ class HumanVsAIPlayView(ctk.CTkFrame):
         else:
             self.paused = not self.paused
             if self.paused:
-                self.start_btn.configure(text="▶ Resume Duel", fg_color="#10B981")
+                self.start_btn.configure(text=" Resume Duel", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
                 self.draw_current_states("MATCH PAUSED", "MATCH PAUSED")
             else:
-                self.start_btn.configure(text="⏸ Pause Duel", fg_color="#F57C00")
+                self.start_btn.configure(text=" Pause Duel", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
                 self.focus_set()
                 self.game_tick()
 
@@ -851,12 +869,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
         if not self.running:
             self.running = True
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause Duel", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause Duel", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.focus_set()
             self.game_tick()
         elif self.paused:
             self.paused = False
-            self.start_btn.configure(text="⏸ Pause Duel", fg_color="#F57C00")
+            self.start_btn.configure(text=" Pause Duel", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.focus_set()
             self.game_tick()
 
@@ -906,7 +924,7 @@ class HumanVsAIPlayView(ctk.CTkFrame):
 
         if h_done or ai_done:
             self.running = False
-            self.start_btn.configure(text="🚀 Duel Game (P)", fg_color="#E11D48")
+            self.start_btn.configure(text=" Duel Game (P)", fg_color="#E11D48")
 
             if h_done and ai_done:
                 winner = "Double Knockout!"

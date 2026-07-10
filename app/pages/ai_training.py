@@ -3,6 +3,7 @@ import time
 import threading
 import collections
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 import numpy as np
 import pandas as pd
 import torch
@@ -140,7 +141,9 @@ class AITrainingPage(ctk.CTkFrame):
         header.pack_propagate(False)
 
         # Left title
-        self.title_lbl = ctk.CTkLabel(header, text="🧠 Training Control Center", font=("Arial", 18, "bold"), text_color="cyan")
+        brain_icon = get_icon("brain_color", size=(24, 24))
+        ctk.CTkLabel(header, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
+        self.title_lbl = ctk.CTkLabel(header, text="Training Control Center", font=("Arial", 18, "bold"), text_color="cyan")
         self.title_lbl.pack(side="left", padx=20)
 
         # Right status markers
@@ -207,28 +210,36 @@ class AITrainingPage(ctk.CTkFrame):
         btn_grid = ctk.CTkFrame(right_side, fg_color="transparent")
         btn_grid.pack(fill="x", padx=10, pady=5)
 
-        self.start_btn = ctk.CTkButton(btn_grid, text="🚀 Train", fg_color="#10B981", width=95, command=self.start_training)
+        rocket_icon = get_icon("rocket", size=(16, 16))
+        self.start_btn = ctk.CTkButton(btn_grid, text=" Train", image=rocket_icon, fg_color="#10B981", width=95, command=self.start_training)
         self.start_btn.grid(row=0, column=0, padx=4, pady=4)
 
-        self.pause_btn = ctk.CTkButton(btn_grid, text="⏸ Pause", fg_color="#F57C00", width=95, state="disabled", command=self.toggle_pause)
+        pause_icon = get_icon("pause", size=(16, 16))
+        self.pause_btn = ctk.CTkButton(btn_grid, text=" Pause", image=pause_icon, fg_color="#F57C00", width=95, state="disabled", command=self.toggle_pause)
         self.pause_btn.grid(row=0, column=1, padx=4, pady=4)
 
-        self.stop_btn = ctk.CTkButton(btn_grid, text="⛔ Stop", fg_color="#D32F2F", width=95, state="disabled", command=self.stop_training)
+        stop_icon = get_icon("stop", size=(16, 16))
+        self.stop_btn = ctk.CTkButton(btn_grid, text=" Stop", image=stop_icon, fg_color="#D32F2F", width=95, state="disabled", command=self.stop_training)
         self.stop_btn.grid(row=0, column=2, padx=4, pady=4)
 
-        self.reset_btn = ctk.CTkButton(btn_grid, text="🔁 Reset", fg_color="#1E3A8A", width=95, command=self.reset_training)
+        refresh_icon = get_icon("refresh_color", size=(16, 16))
+        self.reset_btn = ctk.CTkButton(btn_grid, text=" Reset", image=refresh_icon, fg_color="#1E3A8A", width=95, command=self.reset_training)
         self.reset_btn.grid(row=1, column=0, padx=4, pady=4)
 
-        self.export_csv_btn = ctk.CTkButton(btn_grid, text="📄 CSV", fg_color="#0D9488", width=95, command=self.export_csv)
+        csv_icon = get_icon("csv", size=(16, 16))
+        self.export_csv_btn = ctk.CTkButton(btn_grid, text=" CSV", image=csv_icon, fg_color="#0D9488", width=95, command=self.export_csv)
         self.export_csv_btn.grid(row=1, column=1, padx=4, pady=4)
 
-        self.export_graph_btn = ctk.CTkButton(btn_grid, text="🖼 Export Plot", fg_color="#7B1FA2", width=95, command=self.export_graph)
+        image_icon = get_icon("image", size=(16, 16))
+        self.export_graph_btn = ctk.CTkButton(btn_grid, text=" Export Plot", image=image_icon, fg_color="#7B1FA2", width=95, command=self.export_graph)
         self.export_graph_btn.grid(row=1, column=2, padx=4, pady=4)
 
-        self.play_best_btn = ctk.CTkButton(right_side, text="▶ Play Best AI Model", fg_color="#2563EB", command=self.play_best_ai)
+        play_btn_icon = get_icon("play_btn", size=(16, 16))
+        self.play_best_btn = ctk.CTkButton(right_side, text=" Play Best AI Model", image=play_btn_icon, fg_color="#2563EB", command=self.play_best_ai)
         self.play_best_btn.pack(fill="x", padx=12, pady=4)
 
-        self.replay_best_btn = ctk.CTkButton(right_side, text="🎥 Replay Best Episode", fg_color="#5B21B6", command=self.replay_best_episode)
+        video_icon = get_icon("video", size=(16, 16))
+        self.replay_best_btn = ctk.CTkButton(right_side, text=" Replay Best Episode", image=video_icon, fg_color="#5B21B6", command=self.replay_best_episode)
         self.replay_best_btn.pack(fill="x", padx=12, pady=(4, 15))
 
         btn_grid.grid_columnconfigure((0,1,2), weight=1)
@@ -322,7 +333,7 @@ class AITrainingPage(ctk.CTkFrame):
 
         # Update button statuses
         self.start_btn.configure(state="disabled")
-        self.pause_btn.configure(state="normal", text="⏸ Pause")
+        self.pause_btn.configure(state="normal", text=" Pause", image=get_icon("pause", size=(16, 16)))
         self.stop_btn.configure(state="normal")
         self.status_lbl.configure(text="Training", text_color="orange")
 
@@ -351,12 +362,12 @@ class AITrainingPage(ctk.CTkFrame):
             return
         if self.pause_event.is_set():
             self.pause_event.clear()
-            self.pause_btn.configure(text="⏸ Pause", fg_color="#F57C00")
+            self.pause_btn.configure(text=" Pause", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
             self.status_lbl.configure(text="Training", text_color="orange")
             self.log_txt.insert("end", "▶ Resumed training thread.\n")
         else:
             self.pause_event.set()
-            self.pause_btn.configure(text="▶ Resume", fg_color="#10B981")
+            self.pause_btn.configure(text=" Resume", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
             self.status_lbl.configure(text="Paused", text_color="yellow")
             self.log_txt.insert("end", "⏸ Paused training thread.\n")
 
@@ -556,7 +567,7 @@ class AITrainingPage(ctk.CTkFrame):
         self.status_lbl.configure(text=message, text_color=color)
         
         self.start_btn.configure(state="normal")
-        self.pause_btn.configure(state="disabled", text="⏸ Pause")
+        self.pause_btn.configure(state="disabled", text=" Pause", image=get_icon("pause", size=(16, 16)))
         self.stop_btn.configure(state="disabled")
 
         if error_msg:

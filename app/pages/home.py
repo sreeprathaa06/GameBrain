@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 from app.utils.settings_manager import SettingsManager
 from app.utils.leaderboard_manager import LeaderboardManager
 
@@ -75,8 +76,12 @@ class HomePage(ctk.CTkFrame):
         user_combo = ctk.CTkComboBox(existing_card, values=existing_users, width=220, font=("Arial", 15), height=35)
         user_combo.pack(pady=15)
         
+        login_pass_entry = ctk.CTkEntry(existing_card, placeholder_text="Enter password...", show="*", width=220, font=("Arial", 15), height=35)
+        login_pass_entry.pack(pady=(0, 15))
+        
         def login_existing():
             name = user_combo.get().strip()
+            password = login_pass_entry.get()
             if not name or name == "No existing users found":
                 from tkinter import messagebox
                 messagebox.showwarning("Invalid Selection", "Please select a valid user.")
@@ -88,13 +93,83 @@ class HomePage(ctk.CTkFrame):
                 messagebox.showerror("User Not Found", f"The user '{name}' does not exist. Please create a New User instead.")
                 return
 
+            # Check password
+            auth_file = os.path.join(saved_models_dir, name, "auth.json")
+            if os.path.exists(auth_file):
+                try:
+                    import json, hashlib
+                    with open(auth_file, "r") as f:
+                        auth_data = json.load(f)
+                    
+                    hashed_pw = hashlib.sha256(password.encode()).hexdigest()
+                    if hashed_pw != auth_data.get("password_hash"):
+                        from tkinter import messagebox
+                        messagebox.showerror("Authentication Failed", "Incorrect password.")
+                        return
+                except Exception as e:
+                    print(f"Auth error: {e}")
+
             self.settings_mgr.set("username", name)
             app = self.winfo_toplevel()
             if hasattr(app, "toggle_sidebar"):
                 app.toggle_sidebar(True)
             self.show_state_b(name)
 
-        ctk.CTkButton(existing_card, text="Log In ➔", font=("Arial", 16, "bold"), fg_color="#10B981", hover_color="#059669", height=40, width=180, command=login_existing).pack(pady=(15, 25))
+        ctk.CTkButton(existing_card, text="Log In ➔", font=("Arial", 16, "bold"), fg_color="#10B981", hover_color="#059669", height=40, width=180, command=login_existing).pack(pady=(15, 5))
+
+        def forgot_password():
+            name = user_combo.get().strip()
+            if not name or name == "No existing users found":
+                from tkinter import messagebox
+                messagebox.showwarning("Select User", "Please select a user first.")
+                return
+            
+            auth_file = os.path.join(saved_models_dir, name, "auth.json")
+            if not os.path.exists(auth_file):
+                from tkinter import messagebox
+                messagebox.showinfo("No Password", f"'{name}' does not have a password set.")
+                return
+                
+            # Create a nice custom top-level dialog
+            dialog = ctk.CTkToplevel()
+            dialog.title("Reset Password")
+            dialog.geometry("450x280")
+            dialog.attributes("-topmost", True)
+            dialog.resizable(False, False)
+            
+            dialog.update_idletasks()
+            x = (dialog.winfo_screenwidth() - 450) // 2
+            y = (dialog.winfo_screenheight() - 280) // 2
+            dialog.geometry(f"+{x}+{y}")
+            
+            ctk.CTkLabel(dialog, text=f"Reset Password for '{name}'", font=("Arial", 22, "bold"), text_color="cyan").pack(pady=(25, 10))
+            ctk.CTkLabel(dialog, text="Please enter your new password below:", font=("Arial", 14)).pack(pady=(0, 15))
+            
+            pwd_entry = ctk.CTkEntry(dialog, show="*", width=300, height=40, font=("Arial", 15), placeholder_text="New Password...")
+            pwd_entry.pack(pady=10)
+            
+            def submit():
+                new_pass = pwd_entry.get()
+                if new_pass:
+                    try:
+                        import json, hashlib
+                        hashed_pw = hashlib.sha256(new_pass.encode()).hexdigest()
+                        with open(auth_file, "w") as f:
+                            json.dump({"password_hash": hashed_pw}, f)
+                        from tkinter import messagebox
+                        messagebox.showinfo("Success", "Password reset successfully! You can now log in.")
+                        dialog.destroy()
+                    except Exception as e:
+                        from tkinter import messagebox
+                        messagebox.showerror("Error", f"Failed to reset password: {e}")
+                else:
+                    from tkinter import messagebox
+                    messagebox.showwarning("Missing", "Please enter a password.")
+
+            ctk.CTkButton(dialog, text="Reset Password", font=("Arial", 16, "bold"), fg_color="#3B82F6", height=45, width=200, command=submit).pack(pady=20)
+
+        forgot_btn = ctk.CTkButton(existing_card, text="Forgot Password?", font=("Arial", 12, "underline"), text_color="#3B82F6", fg_color="transparent", hover_color=("gray85", "#333333"), height=20, command=forgot_password)
+        forgot_btn.pack(pady=(0, 15))
 
         # ---- New User Card ----
         new_card = ctk.CTkFrame(columns_frame, fg_color=("gray90", "#222222"), corner_radius=15, border_width=1, border_color=("gray80", "#333333"))
@@ -105,9 +180,15 @@ class HomePage(ctk.CTkFrame):
         name_entry = ctk.CTkEntry(new_card, placeholder_text="Enter new username...", width=220, font=("Arial", 15), height=35)
         name_entry.pack(pady=15)
         
+        new_pass_entry = ctk.CTkEntry(new_card, placeholder_text="Create password...", show="*", width=220, font=("Arial", 15), height=35)
+        new_pass_entry.pack(pady=(0, 15))
+        
         def create_new():
             name = name_entry.get().strip()
-            if not name:
+            password = new_pass_entry.get()
+            if not name or not password:
+                from tkinter import messagebox
+                messagebox.showwarning("Missing Info", "Please enter both username and password.")
                 return
             
             user_dir = os.path.join(saved_models_dir, name)
@@ -120,6 +201,12 @@ class HomePage(ctk.CTkFrame):
                 
             # Actually create the directory right now so they are registered!
             os.makedirs(user_dir, exist_ok=True)
+            
+            # Save password
+            import json, hashlib
+            hashed_pw = hashlib.sha256(password.encode()).hexdigest()
+            with open(os.path.join(user_dir, "auth.json"), "w") as f:
+                json.dump({"password_hash": hashed_pw}, f)
             
             self.settings_mgr.set("username", name)
             app = self.winfo_toplevel()
@@ -157,7 +244,11 @@ class HomePage(ctk.CTkFrame):
         readiness_frame = ctk.CTkFrame(self.main_container, fg_color="transparent")
         readiness_frame.pack(fill="x", padx=40, pady=10)
         
-        ctk.CTkLabel(readiness_frame, text="🧠 Model Readiness", font=("Arial", 24, "bold"), text_color=("gray20", "gray80")).pack(anchor="w", pady=(0, 15))
+        header_readiness = ctk.CTkFrame(readiness_frame, fg_color="transparent")
+        header_readiness.pack(anchor="w", pady=(0, 15))
+        brain_icon = get_icon("brain_color", size=(28, 28))
+        ctk.CTkLabel(header_readiness, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_readiness, text="Model Readiness", font=("Arial", 24, "bold"), text_color=("gray20", "gray80")).pack(side="left")
         
         models_grid = ctk.CTkFrame(readiness_frame, fg_color=("gray90", "#222222"), corner_radius=15, border_width=1, border_color=("gray80", "#333333"))
         models_grid.pack(fill="x")
@@ -239,6 +330,10 @@ class HomePage(ctk.CTkFrame):
             if hasattr(app, "show_page"):
                 app.show_page(page)
                 
-        ctk.CTkButton(btn_frame, text="🚀 Start Training", fg_color="#F97316", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("ai_training")).pack(side="left", padx=15)
-        ctk.CTkButton(btn_frame, text="📊 View Dashboard", fg_color="#8B5CF6", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("dashboard")).pack(side="left", padx=15)
-        ctk.CTkButton(btn_frame, text="🎮 Play Games", fg_color="#10B981", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("play")).pack(side="left", padx=15)
+        rocket_icon = get_icon("rocket_color", size=(20, 20))
+        ctk.CTkButton(btn_frame, text=" Start Training", image=rocket_icon, fg_color="#F97316", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("ai_training")).pack(side="left", padx=15)
+        
+        dashboard_icon = get_icon("dashboard_color", size=(20, 20))
+        ctk.CTkButton(btn_frame, text=" View Dashboard", image=dashboard_icon, fg_color="#8B5CF6", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("dashboard")).pack(side="left", padx=15)
+        game_icon = get_icon("game_color", size=(20, 20))
+        ctk.CTkButton(btn_frame, text=" Play Games", image=game_icon, fg_color="#10B981", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("play")).pack(side="left", padx=15)

@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 from app.utils.leaderboard_manager import LeaderboardManager
 from app.utils.settings_manager import SettingsManager
 from app.pages.play import GAME_REGISTRY
@@ -91,9 +92,11 @@ class LeaderboardView(ctk.CTkFrame):
             item_frame = ctk.CTkFrame(scroll, fg_color=bg, border_width=1, border_color=border, corner_radius=10)
             item_frame.pack(fill="x", pady=6, padx=5)
 
+            icon_img = get_icon("trophy_color", size=(20, 20)) if unlocked else get_icon("lock_color", size=(20, 20))
             badge = ctk.CTkLabel(
                 item_frame,
-                text=" 🏆 " if unlocked else " 🔒 ",
+                text="",
+                image=icon_img,
                 font=("Arial", 22),
                 text_color=color
             )
@@ -180,12 +183,16 @@ class LeaderboardPage(ctk.CTkFrame):
         self.show_menu()
 
     def build_menu_view(self):
+        header = ctk.CTkFrame(self.scroll_canvas, fg_color="transparent")
+        header.pack(fill="x", padx=40, pady=(40, 20))
+        trophy_icon = get_icon("trophy_color", size=(28, 28))
+        ctk.CTkLabel(header, text="" if trophy_icon else "🏆 ", image=trophy_icon).pack(side="left", padx=(0, 5))
         title = ctk.CTkLabel(
-            self.scroll_canvas,
-            text="🏆 Choose Leaderboard",
+            header,
+            text="Choose Leaderboard",
             font=("Arial", 34, "bold")
         )
-        title.pack(pady=(20, 5))
+        title.pack(side="left")
 
         subtitle = ctk.CTkLabel(
             self.scroll_canvas,

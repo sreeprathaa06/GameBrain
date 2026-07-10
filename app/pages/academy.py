@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 import webbrowser
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -7,12 +8,16 @@ class AcademyPage(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent, fg_color="transparent")
 
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=40, pady=(40, 20))
+        brain_icon = get_icon("brain_color", size=(28, 28))
+        ctk.CTkLabel(header, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
         title = ctk.CTkLabel(
-            self,
-            text="🧠 AI Academy: Reinforcement Learning",
+            header,
+            text="AI Academy: Reinforcement Learning",
             font=("Arial", 30, "bold")
         )
-        title.pack(pady=(15, 10))
+        title.pack(side="left", pady=(15, 10))
 
         # Split layout: Left lessons index, Right reader frame
         split_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -148,7 +153,10 @@ class AcademyPage(ctk.CTkFrame):
         for child in self.quiz_frame.winfo_children():
             child.destroy()
             
-        ctk.CTkLabel(self.quiz_frame, text="🧠 AI Academy Knowledge Check", font=("Arial", 26, "bold"), text_color="#005B96").pack(anchor="w", pady=(0, 20))
+        header_quiz = ctk.CTkFrame(self.quiz_frame, fg_color="transparent")
+        header_quiz.pack(anchor="w", pady=(0, 20))
+        ctk.CTkLabel(header_quiz, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_quiz, text="AI Academy Knowledge Check", font=("Arial", 26, "bold"), text_color="#005B96").pack(side="left")
         
         self.quiz_answers = {}
         

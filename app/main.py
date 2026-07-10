@@ -53,11 +53,44 @@ class GameBrain(ctk.CTk):
 
         super().__init__()
 
-        self.title("🎮 GameBrain")
+        self.title("GameBrain")
 
         self.geometry("1450x850")
 
         self.minsize(1250, 750)
+
+        # Set App Icon correctly on Windows taskbar
+        icon_path = os.path.join(PROJECT_ROOT, "assets", "icons", "app_icon.png")
+        if os.path.exists(icon_path):
+            try:
+                import sys
+                from PIL import Image
+                
+                # Convert PNG to ICO for Windows
+                ico_path = icon_path.replace(".png", ".ico")
+                
+                # Check if we need to regenerate the ICO
+                needs_update = not os.path.exists(ico_path)
+                if not needs_update:
+                    png_mtime = os.path.getmtime(icon_path)
+                    ico_mtime = os.path.getmtime(ico_path)
+                    if png_mtime > ico_mtime:
+                        needs_update = True
+                        
+                if needs_update:
+                    img = Image.open(icon_path)
+                    img.save(ico_path)
+                
+                # Apply icon
+                self.iconbitmap(ico_path)
+                
+                # Tell Windows to treat this as a separate app (fixes taskbar icon)
+                if sys.platform == "win32":
+                    import ctypes
+                    myappid = 'gamebrain.app.1.0'
+                    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+            except Exception as e:
+                print(f"Could not load icon: {e}")
         self.after(0, lambda: self.state('zoomed'))
 
         self.configure(fg_color=("gray95", "#141414"))

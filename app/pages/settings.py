@@ -1,5 +1,6 @@
 import os
 import customtkinter as ctk
+from app.utils.icon_loader import get_icon
 from tkinter import filedialog, messagebox
 from app.utils.settings_manager import SettingsManager
 
@@ -8,12 +9,23 @@ class SettingsPage(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent")
         self.settings = SettingsManager()
 
+        self.main_container = self
+        header = ctk.CTkFrame(self.main_container, fg_color="transparent")
+        header.pack(fill="x", padx=40, pady=(40, 20))
+        
+        settings_icon = get_icon("settings_color", size=(28, 28))
+        ctk.CTkLabel(
+            header,
+            text="" if settings_icon else "⚙ ",
+            image=settings_icon
+        ).pack(side="left", padx=(0, 5))
+        
         title = ctk.CTkLabel(
-            self,
-            text="⚙ GameBrain Settings",
+            header,
+            text="GameBrain Settings",
             font=("Arial", 30, "bold")
         )
-        title.pack(pady=15)
+        title.pack(side="left")
 
         # Scrollable container for forms
         self.scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
@@ -27,11 +39,16 @@ class SettingsPage(ctk.CTkFrame):
 
         # 3. Environment & Directories Section
         self.create_env_card()
+
     def create_appearance_card(self):
         card = ctk.CTkFrame(self.scroll, fg_color=("gray95", "#202020"), corner_radius=15, border_width=1, border_color=("gray85", "#303030"))
         card.pack(fill="x", pady=10, padx=5)
 
-        ctk.CTkLabel(card, text="🎨 UI Appearance & Aesthetics", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(anchor="w", padx=20, pady=(15, 10))
+        palette_icon = get_icon("palette_color", size=(20, 20))
+        header_ui = ctk.CTkFrame(card, fg_color="transparent")
+        header_ui.pack(fill="x", padx=20, pady=(15, 10))
+        ctk.CTkLabel(header_ui, text="" if palette_icon else "🎨 ", image=palette_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_ui, text="UI Appearance & Aesthetics", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(side="left")
 
         form = ctk.CTkFrame(card, fg_color="transparent")
         form.pack(fill="x", padx=20, pady=(5, 15))
@@ -46,13 +63,15 @@ class SettingsPage(ctk.CTkFrame):
         self.theme_menu.grid(row=0, column=1, sticky="w", padx=20, pady=8)
         self.theme_menu.set(self.settings.get("theme", "dark"))
 
-
-
     def create_sim_card(self):
         card = ctk.CTkFrame(self.scroll, fg_color=("gray95", "#202020"), corner_radius=15, border_width=1, border_color=("gray85", "#303030"))
         card.pack(fill="x", pady=10, padx=5)
 
-        ctk.CTkLabel(card, text="🎮 Simulation & Training Parameters", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(anchor="w", padx=20, pady=(15, 10))
+        game_icon = get_icon("game_color", size=(20, 20))
+        header_sim = ctk.CTkFrame(card, fg_color="transparent")
+        header_sim.pack(fill="x", padx=20, pady=(15, 10))
+        ctk.CTkLabel(header_sim, text="" if game_icon else "🎮 ", image=game_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_sim, text="Simulation & Training Parameters", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(side="left")
 
         form = ctk.CTkFrame(card, fg_color="transparent")
         form.pack(fill="x", padx=20, pady=(5, 15))
@@ -85,7 +104,11 @@ class SettingsPage(ctk.CTkFrame):
         card = ctk.CTkFrame(self.scroll, fg_color=("gray95", "#202020"), corner_radius=15, border_width=1, border_color=("gray85", "#303030"))
         card.pack(fill="x", pady=10, padx=5)
 
-        ctk.CTkLabel(card, text="⚙ Hardware & Directories", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(anchor="w", padx=20, pady=(15, 10))
+        hw_icon = get_icon("settings_color", size=(20, 20))
+        header_hw = ctk.CTkFrame(card, fg_color="transparent")
+        header_hw.pack(fill="x", padx=20, pady=(15, 10))
+        ctk.CTkLabel(header_hw, text="" if hw_icon else "⚙ ", image=hw_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header_hw, text="Hardware & Directories", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(side="left")
 
         form = ctk.CTkFrame(card, fg_color="transparent")
         form.pack(fill="x", padx=20, pady=(5, 15))
