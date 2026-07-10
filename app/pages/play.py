@@ -19,7 +19,7 @@ from rl.dqn.agent import DQNAgent
 
 GAME_REGISTRY = {
     "snake": {
-        "name": "🐉 Snake AI Arena",
+        "name": "Snake AI Arena",
         "title_color": "#10B981", # Green
         "desc": "Deep Q-Learning RL Environment",
         "algo": "DQN Network",
@@ -30,7 +30,7 @@ GAME_REGISTRY = {
         "action_size": 4
     },
     "ping_pong": {
-        "name": "🎾 Ping Pong Duel",
+        "name": "Ping Pong Duel",
         "title_color": "#F43F5E", # Red/Pink
         "desc": "Fast-paced physics paddle game",
         "algo": "DQN Network",
@@ -41,7 +41,7 @@ GAME_REGISTRY = {
         "action_size": 3
     },
     "flappy_bird": {
-        "name": "🦅 Flappy Bird Clone",
+        "name": "Flappy Bird Clone",
         "title_color": "#FBBF24", # Yellow
         "desc": "Gravity-defying bird survival",
         "algo": "DQN Network",
@@ -105,20 +105,11 @@ class PlayPage(ctk.CTkFrame):
             title_frame = ctk.CTkFrame(left, fg_color="transparent")
             title_frame.pack(anchor="w")
             
-            emoji, rest_of_title = info["name"].split(" ", 1)
-            
             ctk.CTkLabel(
                 title_frame,
-                text=emoji + " ",
+                text=info["name"],
                 font=("Arial", 28, "bold"),
                 text_color=info.get("title_color", "white")
-            ).pack(side="left")
-
-            ctk.CTkLabel(
-                title_frame,
-                text=rest_of_title,
-                font=("Arial", 28, "bold"),
-                text_color="white"
             ).pack(side="left")
 
             ctk.CTkLabel(
@@ -150,9 +141,9 @@ class PlayPage(ctk.CTkFrame):
             right = ctk.CTkFrame(card, fg_color="transparent")
             right.pack(side="right", padx=25, pady=20)
 
-            self.btn(right, "👤 Human Play", "#10B981", lambda gid=game_id: self.show_view("human", gid))
-            self.btn(right, "⚔ Human vs AI", "#8B5CF6", lambda gid=game_id: self.show_view("human_vs_ai", gid))
-            self.btn(right, "🧠 Train Models", "#F97316", lambda gid=game_id: self.goto_training(gid))
+            self.btn(right, " Human Play", "#10B981", lambda gid=game_id: self.show_view("human", gid), "game_color")
+            self.btn(right, " Human vs AI", "#8B5CF6", lambda gid=game_id: self.show_view("human_vs_ai", gid), "robot_color")
+            self.btn(right, " Train Models", "#F97316", lambda gid=game_id: self.goto_training(gid), "brain_color")
 
         self.start_preview_loop()
 
@@ -162,10 +153,12 @@ class PlayPage(ctk.CTkFrame):
         ctk.CTkLabel(frame, text=title, font=("Arial", 11), text_color="gray70").pack(padx=12, pady=(6, 0))
         ctk.CTkLabel(frame, text=value, font=("Arial", 13, "bold"), text_color="cyan").pack(padx=12, pady=(0, 6))
 
-    def btn(self, parent, text, color, command):
+    def btn(self, parent, text, color, command, icon_name=None):
+        icon = get_icon(icon_name, size=(18, 18)) if icon_name else None
         ctk.CTkButton(
             parent,
             text=text,
+            image=icon,
             width=180,
             height=45,
             fg_color=color,
