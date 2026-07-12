@@ -1,6 +1,14 @@
 import os
 from PIL import Image
 import customtkinter as ctk
+import sys
+
+def resource_path(relative_path):
+    try:
+        base = sys._MEIPASS
+    except Exception:
+        base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(base, relative_path)
 
 # Cache for loaded images so we don't reload them multiple times
 _icon_cache = {}
@@ -14,8 +22,7 @@ def get_icon(name, size=(24, 24)):
         return _icon_cache[key]
     
     # Calculate path relative to this file
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    icon_path = os.path.join(base_dir, "assets", "icons", f"{name}.png")
+    icon_path = resource_path(os.path.join("assets", "icons", f"{name}.png"))
     
     if not os.path.exists(icon_path):
         print(f"Warning: Icon {name}.png not found at {icon_path}")

@@ -155,6 +155,8 @@ class AcademyPage(ctk.CTkFrame):
             
         header_quiz = ctk.CTkFrame(self.quiz_frame, fg_color="transparent")
         header_quiz.pack(anchor="w", pady=(0, 20))
+        
+        brain_icon = get_icon("brain_color", size=(28, 28))
         ctk.CTkLabel(header_quiz, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
         ctk.CTkLabel(header_quiz, text="AI Academy Knowledge Check", font=("Arial", 26, "bold"), text_color="#005B96").pack(side="left")
         

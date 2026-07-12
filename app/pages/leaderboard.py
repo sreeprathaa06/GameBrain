@@ -25,12 +25,18 @@ class LeaderboardView(ctk.CTkFrame):
         back_btn.pack(side="left")
         
         game_info = GAME_REGISTRY.get(self.game_id, GAME_REGISTRY["snake"])
+        
+        if "icon" in game_info:
+            game_img = get_icon(game_info["icon"], size=(32, 32))
+            if game_img:
+                ctk.CTkLabel(header_frame, text="", image=game_img).pack(side="left", padx=(10, 5))
+                
         title = ctk.CTkLabel(
             header_frame,
             text=f"🏆 Hall of Fame - {game_info['name']}",
             font=("Arial", 30, "bold")
         )
-        title.pack(side="left", padx=20)
+        title.pack(side="left", padx=(5, 20))
 
         self.tabs = ctk.CTkTabview(self, fg_color=("gray95", "#202020"), corner_radius=15)
         self.tabs.pack(fill="both", expand=True, padx=20, pady=10)
@@ -213,33 +219,18 @@ class LeaderboardPage(ctk.CTkFrame):
             card.pack(fill="x", padx=35, pady=15)
 
             left = ctk.CTkFrame(card, fg_color="transparent")
-            left.pack(side="left", padx=25, pady=20)
+            left.pack(side="left", padx=20, pady=20)
 
             title_frame = ctk.CTkFrame(left, fg_color="transparent")
             title_frame.pack(anchor="w")
             
-            emoji, rest_of_title = info["name"].split(" ", 1)
-            
-            ctk.CTkLabel(
-                title_frame,
-                text=emoji + " ",
-                font=("Arial", 28, "bold"),
-                text_color=info.get("title_color", "white")
-            ).pack(side="left")
+            if "icon" in info:
+                list_img = get_icon(info["icon"], size=(24, 24))
+                if list_img:
+                    ctk.CTkLabel(title_frame, text="", image=list_img).pack(side="left", padx=(0, 10))
 
-            ctk.CTkLabel(
-                title_frame,
-                text=rest_of_title,
-                font=("Arial", 28, "bold"),
-                text_color="white"
-            ).pack(side="left")
-
-            ctk.CTkLabel(
-                left,
-                text=info["desc"],
-                font=("Arial", 15),
-                text_color="gray70"
-            ).pack(anchor="w", pady=(5, 0))
+            ctk.CTkLabel(title_frame, text=info["name"], font=("Arial", 24, "bold"), text_color=info.get("title_color", "white")).pack(side="left")
+            ctk.CTkLabel(left, text=info["desc"], font=("Arial", 14), text_color="gray70").pack(anchor="w", pady=(5, 0))
 
             right = ctk.CTkFrame(card, fg_color="transparent")
             right.pack(side="right", padx=25, pady=20)

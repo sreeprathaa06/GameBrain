@@ -20,6 +20,7 @@ from rl.dqn.agent import DQNAgent
 GAME_REGISTRY = {
     "snake": {
         "name": "Snake AI Arena",
+        "icon": "snake_color",
         "title_color": "#10B981", # Green
         "desc": "Deep Q-Learning RL Environment",
         "algo": "DQN Network",
@@ -31,6 +32,7 @@ GAME_REGISTRY = {
     },
     "ping_pong": {
         "name": "Ping Pong Duel",
+        "icon": "ping_pong_color",
         "title_color": "#F43F5E", # Red/Pink
         "desc": "Fast-paced physics paddle game",
         "algo": "DQN Network",
@@ -42,6 +44,7 @@ GAME_REGISTRY = {
     },
     "flappy_bird": {
         "name": "Flappy Bird Clone",
+        "icon": "flappy_bird_color",
         "title_color": "#FBBF24", # Yellow
         "desc": "Gravity-defying bird survival",
         "algo": "DQN Network",
@@ -104,6 +107,11 @@ class PlayPage(ctk.CTkFrame):
 
             title_frame = ctk.CTkFrame(left, fg_color="transparent")
             title_frame.pack(anchor="w")
+            
+            if "icon" in info:
+                game_img = get_icon(info["icon"], size=(28, 28))
+                if game_img:
+                    ctk.CTkLabel(title_frame, text="", image=game_img).pack(side="left", padx=(0, 10))
             
             ctk.CTkLabel(
                 title_frame,

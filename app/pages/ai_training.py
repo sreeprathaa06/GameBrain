@@ -115,7 +115,13 @@ class AITrainingPage(ctk.CTkFrame):
         # update UI
         if hasattr(self, 'title_lbl'):
             username = self.settings.get("username", "Player1")
-            self.title_lbl.configure(text=f"🧠 {username}'s AI Center - {self.game_info['name']}")
+            self.title_lbl.configure(text=f"{username}'s AI Center - {self.game_info['name']}")
+            
+        if hasattr(self, 'game_icon_lbl'):
+            if "icon" in self.game_info:
+                g_icon = get_icon(self.game_info["icon"], size=(24, 24))
+                if g_icon:
+                    self.game_icon_lbl.configure(image=g_icon)
         
         active_model = f"best_dqn_model_{self.game_id}.pth"
         if hasattr(self, 'model_lbl'):
@@ -142,9 +148,13 @@ class AITrainingPage(ctk.CTkFrame):
 
         # Left title
         brain_icon = get_icon("brain_color", size=(24, 24))
-        ctk.CTkLabel(header, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(0, 5))
+        ctk.CTkLabel(header, text="" if brain_icon else "🧠 ", image=brain_icon).pack(side="left", padx=(10, 5))
+        
+        self.game_icon_lbl = ctk.CTkLabel(header, text="")
+        self.game_icon_lbl.pack(side="left", padx=(0, 5))
+
         self.title_lbl = ctk.CTkLabel(header, text="Training Control Center", font=("Arial", 18, "bold"), text_color="cyan")
-        self.title_lbl.pack(side="left", padx=20)
+        self.title_lbl.pack(side="left", padx=(0, 20))
 
         # Right status markers
         self.device_lbl = self.status_marker(header, "Device", "CUDA" if torch.cuda.is_available() else "CPU")

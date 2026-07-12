@@ -171,12 +171,18 @@ class DashboardView(ctk.CTkFrame):
         back_btn.pack(side="left")
 
         game_info = GAME_REGISTRY.get(self.game_id, GAME_REGISTRY["snake"])
+        
+        if "icon" in game_info:
+            game_img = get_icon(game_info["icon"], size=(32, 32))
+            if game_img:
+                ctk.CTkLabel(header_frame, text="", image=game_img).pack(side="left", padx=(10, 5))
+                
         self.title_lbl = ctk.CTkLabel(
             header_frame,
             text=f"📊 AI Training Dashboard - {game_info['name']}",
             font=("Arial", 30, "bold")
         )
-        self.title_lbl.pack(side="left", padx=20)
+        self.title_lbl.pack(side="left", padx=(5, 20))
 
         top = ctk.CTkFrame(self, fg_color="transparent")
         top.pack(fill="x", padx=20, pady=10)
@@ -255,11 +261,16 @@ class DashboardPage(ctk.CTkFrame):
             title_frame = ctk.CTkFrame(left, fg_color="transparent")
             title_frame.pack(anchor="w")
             
-            emoji, rest_of_title = info["name"].split(" ", 1)
+            if "icon" in info:
+                game_img = get_icon(info["icon"], size=(28, 28))
+                if game_img:
+                    ctk.CTkLabel(title_frame, text="", image=game_img).pack(side="left", padx=(0, 10))
+            
+            first_word, rest_of_title = info["name"].split(" ", 1)
             
             ctk.CTkLabel(
                 title_frame,
-                text=emoji + " ",
+                text=first_word + " ",
                 font=("Arial", 28, "bold"),
                 text_color=info.get("title_color", "white")
             ).pack(side="left")

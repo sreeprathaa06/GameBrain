@@ -10,7 +10,11 @@ icons = {
     "settings": "https://img.icons8.com/ios-filled/50/ffffff/settings.png",
     "lock": "https://img.icons8.com/ios-filled/50/ffffff/lock.png",
     "robot": "https://img.icons8.com/ios-filled/50/ffffff/bot.png",
-    "close": "https://img.icons8.com/ios-filled/50/ffffff/delete-sign.png"
+    "close": "https://img.icons8.com/ios-filled/50/ffffff/delete-sign.png",
+    "snake_color": "https://img.icons8.com/color/50/snake.png",
+    "ping_pong_color": "https://img.icons8.com/color/50/ping-pong.png",
+    "flappy_bird_color": "https://img.icons8.com/color/50/bird.png",
+    "chess": "https://img.icons8.com/ios-filled/50/ffffff/chess.png"
 }
 
 icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "icons")
