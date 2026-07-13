@@ -1,0 +1,12 @@
+{
+    "filename": "gamebrain_dqn_snake.pth",
+    "training_date": "2026-07-13 09:55",
+    "best_reward": 2.45,
+    "episode": 500,
+    "model_size_kb": 76.22,
+    "state_size": 12,
+    "action_size": 4,
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "batch_size": 64
+}

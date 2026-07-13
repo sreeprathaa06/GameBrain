@@ -7,6 +7,12 @@
     "fastest_training_time_sec": 162.96,
     "recent_sessions": [
         {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 18,
+            "date": "2026-07-12 18:45"
+        },
+        {
             "mode": "Human",
             "score": 1,
             "survival_steps": 39,

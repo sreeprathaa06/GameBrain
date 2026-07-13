@@ -1,0 +1,12 @@
+{
+    "filename": "gamebrain_dqn_flappy_bird.pth",
+    "training_date": "2026-07-12 18:47",
+    "best_reward": -6.6,
+    "episode": 500,
+    "model_size_kb": 71.36,
+    "state_size": 4,
+    "action_size": 2,
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "batch_size": 64
+}

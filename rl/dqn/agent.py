@@ -73,7 +73,7 @@ class DQNAgent:
         # Save folder based on user profile
         from app.utils.settings_manager import SettingsManager
         username = SettingsManager().get("username", "Player1")
-        self.model_folder = os.path.join("saved_models", username)
+        self.model_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_models", username))
         os.makedirs(self.model_folder, exist_ok=True)
 
         print("Agent Ready")

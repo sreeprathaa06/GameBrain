@@ -398,12 +398,12 @@ class AITrainingPage(ctk.CTkFrame):
             return
 
         username = self.settings.get("username", "Player1")
-        model_path = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.pth")
-        meta_path = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.json")
+        model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_models", username, f"best_dqn_model_{self.game_id}.pth"))
+        meta_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_models", username, f"best_dqn_model_{self.game_id}.json"))
         log_path = os.path.abspath(os.path.join(
             os.path.dirname(__file__), "..", "..", "training_logs", username, f"training_log_{self.game_id}.csv"
         ))
-        leaderboard_path = os.path.join("saved_models", username, f"leaderboard_{self.game_id}.json")
+        leaderboard_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_models", username, f"leaderboard_{self.game_id}.json"))
         
         try:
             if os.path.exists(model_path):

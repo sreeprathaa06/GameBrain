@@ -364,12 +364,12 @@ class HumanPlayView(ctk.CTkFrame):
     def on_key_press(self, event):
         key = event.keysym.lower()
         
-        if self.game_info["name"] == "🎾 Ping Pong Duel":
+        if self.game_info["name"] == "Ping Pong Duel":
             if key in ("w", "up"):
                 self.controller.action = 1
             elif key in ("s", "down"):
                 self.controller.action = 2
-        elif self.game_info["name"] == "🦅 Flappy Bird Clone":
+        elif self.game_info["name"] == "Flappy Bird Clone":
             if key in ("w", "up", "space"):
                 self.controller.action = 1
         else: # Snake
@@ -382,7 +382,7 @@ class HumanPlayView(ctk.CTkFrame):
             elif key in ("right", "d"):
                 self.controller.action = 3
 
-        if key == "p" or (key == "space" and self.game_info["name"] != "🦅 Flappy Bird Clone"):
+        if key == "p" or (key == "space" and self.game_info["name"] != "Flappy Bird Clone"):
             self.toggle_play()
         elif key == "r":
             self.restart()
@@ -391,7 +391,7 @@ class HumanPlayView(ctk.CTkFrame):
             
     def on_key_release(self, event):
         key = event.keysym.lower()
-        if self.game_info["name"] in ("🎾 Ping Pong Duel", "🦅 Flappy Bird Clone"):
+        if self.game_info["name"] in ("Ping Pong Duel", "Flappy Bird Clone"):
             if key in ("w", "s", "up", "down", "space"):
                 self.controller.action = 0
 
@@ -791,12 +791,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
     def on_key_press(self, event):
         key = event.keysym.lower()
         
-        if self.game_info["name"] == "🎾 Ping Pong Duel":
+        if self.game_info["name"] == "Ping Pong Duel":
             if key in ("w", "up"):
                 self.h_controller.action = 1
             elif key in ("s", "down"):
                 self.h_controller.action = 2
-        elif self.game_info["name"] == "🦅 Flappy Bird Clone":
+        elif self.game_info["name"] == "Flappy Bird Clone":
             if key in ("w", "up", "space"):
                 self.h_controller.action = 1
         else: # Snake
@@ -809,12 +809,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
             elif key in ("right", "d"):
                 self.h_controller.action = 3
 
-        if key == "p" or (key == "space" and self.game_info["name"] != "🦅 Flappy Bird Clone"):
+        if key == "p" or (key == "space" and self.game_info["name"] != "Flappy Bird Clone"):
             self.toggle_play()
             
     def on_key_release(self, event):
         key = event.keysym.lower()
-        if self.game_info["name"] in ("🎾 Ping Pong Duel", "🦅 Flappy Bird Clone"):
+        if self.game_info["name"] in ("Ping Pong Duel", "Flappy Bird Clone"):
             if key in ("w", "s", "up", "down", "space"):
                 self.h_controller.action = 0
 

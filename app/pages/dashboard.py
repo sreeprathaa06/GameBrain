@@ -35,7 +35,7 @@ class DashboardView(ctk.CTkFrame):
 
     def load_training_data(self):
         username = SettingsManager().get("username", "Player1")
-        log_file = os.path.join("training_logs", username, f"training_log_{self.game_id}.csv")
+        log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "training_logs", username, f"training_log_{self.game_id}.csv"))
 
         self.best_reward = 0
         self.total_episodes = 0
@@ -68,7 +68,7 @@ class DashboardView(ctk.CTkFrame):
         self.loss_value.configure(text=str(self.last_loss))
 
         username = SettingsManager().get("username", "Player1")
-        model = os.path.join("saved_models", username, f"best_dqn_model_{self.game_id}.pth")
+        model = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_models", username, f"best_dqn_model_{self.game_id}.pth"))
 
         if os.path.exists(model):
             self.status_label.configure(text="✅ Trained Model Available", text_color=("#006400", "lightgreen"))

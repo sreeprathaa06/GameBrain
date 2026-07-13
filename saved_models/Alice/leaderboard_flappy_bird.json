@@ -1,7 +1,7 @@
 {
     "highest_human_score": 0,
     "highest_ai_score": 0,
-    "longest_survival_steps": 226,
+    "longest_survival_steps": 210,
     "most_apples_single_game": 0,
     "best_training_reward": 0.0,
     "fastest_training_time_sec": 0.0,
@@ -9,38 +9,8 @@
         {
             "mode": "Human",
             "score": 0,
-            "survival_steps": 226,
-            "date": "2026-07-09 22:01"
-        },
-        {
-            "mode": "Human",
-            "score": 0,
-            "survival_steps": 143,
-            "date": "2026-07-09 21:58"
-        },
-        {
-            "mode": "Human",
-            "score": 0,
-            "survival_steps": 21,
-            "date": "2026-07-09 21:53"
-        },
-        {
-            "mode": "Human",
-            "score": 0,
-            "survival_steps": 21,
-            "date": "2026-07-09 21:50"
-        },
-        {
-            "mode": "Human",
-            "score": 0,
-            "survival_steps": 21,
-            "date": "2026-07-09 21:50"
-        },
-        {
-            "mode": "Human",
-            "score": 0,
-            "survival_steps": 21,
-            "date": "2026-07-09 21:50"
+            "survival_steps": 210,
+            "date": "2026-07-12 18:50"
         }
     ],
     "achievements": {

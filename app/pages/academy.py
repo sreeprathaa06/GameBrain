@@ -445,7 +445,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "In Deep Q-Learning, the AI tries to predict future rewards. But because it is constantly updating its own brain, the 'target' it is aiming for keeps moving. Imagine trying to hit a bullseye that shifts every time you shoot an arrow!"),
                     ("h2", "Stabilizing with a Second Brain"),
                     ("p", "To fix this, we use a 'Target Network'. This is simply a frozen copy of the main Neural Network. We use this frozen copy to calculate our targets, and we only update it occasionally (e.g. every 1,000 steps)."),
-                    ("p", "By freezing the target, the main network has a stable goal to aim for, which prevents the AI from falling into feedback loops and forgetting how to play.")
+                    ("p", "By freezing the target, the main network has a stable goal to aim for, which prevents the AI from falling into feedback loops and forgetting how to play."),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Q-learning#Deep_Q-learning")
                 ]
             },
             "replay_buffer": {
@@ -454,7 +455,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "If an AI only learns from the exact moment it is currently experiencing, it will suffer from 'Catastrophic Forgetting'. If the snake only moves right for 50 steps, it forgets how to move left!"),
                     ("h2", "Learning from Past Memories"),
                     ("p", "The Replay Buffer is a massive database that stores the last 100,000 steps the AI took (State, Action, Reward, Next State)."),
-                    ("p", "During training, instead of learning from the current step, the AI randomly samples a 'batch' of 64 memories from the buffer. This breaks the correlation between consecutive steps and ensures the AI remembers how to handle all situations.")
+                    ("p", "During training, instead of learning from the current step, the AI randomly samples a 'batch' of 64 memories from the buffer. This breaks the correlation between consecutive steps and ensures the AI remembers how to handle all situations."),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Q-learning#Deep_Q-learning")
                 ]
             },
             "gamma": {
@@ -462,7 +464,8 @@ class AcademyPage(ctk.CTkFrame):
                 "elements": [
                     ("p", "How much should an AI care about the future? If Gamma is 0, the AI only cares about immediate rewards (like eating food right in front of it) and will happily crash into a wall immediately after."),
                     ("h2", "Valuing the Future"),
-                    ("p", "If Gamma is 0.99, the AI values a reward 100 steps in the future almost as much as a reward right now. This forces the AI to plan ahead. In Ping Pong, it learns to hit the ball in a way that makes it harder for the opponent to return it later, rather than just surviving the current hit.")
+                    ("p", "If Gamma is 0.99, the AI values a reward 100 steps in the future almost as much as a reward right now. This forces the AI to plan ahead. In Ping Pong, it learns to hit the ball in a way that makes it harder for the opponent to return it later, rather than just surviving the current hit."),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Markov_decision_process#Discount_factor")
                 ]
             },
             "state_space": {
@@ -471,7 +474,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "The 'State' is everything the AI knows about the world. If we don't give the AI enough information, it's like playing a game blindfolded."),
                     ("h2", "Pixels vs Vectors"),
                     ("p", "We could give the AI raw pixels from the screen, but that requires massive Convolutional Neural Networks and days of training. Instead, GameBrain uses 'Vector States'."),
-                    ("p", "In Flappy Bird, the state is simply 3 numbers: [Bird Y Velocity, Distance to Top Pipe, Distance to Bottom Pipe]. This is all the math the AI needs to master the game instantly!")
+                    ("p", "In Flappy Bird, the state is simply 3 numbers: [Bird Y Velocity, Distance to Top Pipe, Distance to Bottom Pipe]. This is all the math the AI needs to master the game instantly!"),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/State_space")
                 ]
             },
             "batch_learning": {
@@ -479,7 +483,8 @@ class AcademyPage(ctk.CTkFrame):
                 "elements": [
                     ("p", "When the AI updates its brain, it doesn't just look at one memory. It looks at a 'Batch'. A Batch Size of 64 means it averages the error across 64 different memories before adjusting its weights."),
                     ("h2", "The Learning Rate"),
-                    ("p", "The Learning Rate determines how aggressively the AI changes its weights. A rate of 0.001 is common. If the rate is too high, the AI will overreact and destroy its own knowledge. If it's too low, it will take years to learn anything.")
+                    ("p", "The Learning Rate determines how aggressively the AI changes its weights. A rate of 0.001 is common. If the rate is too high, the AI will overreact and destroy its own knowledge. If it's too low, it will take years to learn anything."),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Batch_gradient_descent")
                 ]
             },
             "overfitting": {
@@ -488,7 +493,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "Overfitting occurs when an AI memorizes a specific level instead of actually learning how to play the game."),
                     ("h2", "Memorization vs Generalization"),
                     ("p", "If we always spawned the Snake food in the exact same spot, the AI would learn a hardcoded path to get there. If we moved the food 1 pixel, the AI would fail completely!"),
-                    ("p", "To prevent overfitting, we add randomness to our environments. The food spawns randomly, pipes appear at different heights, and the ball bounces at different angles. This forces the AI to learn 'Generalization'.")
+                    ("p", "To prevent overfitting, we add randomness to our environments. The food spawns randomly, pipes appear at different heights, and the ball bounces at different angles. This forces the AI to learn 'Generalization'."),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Overfitting")
                 ]
             },
             "pytorch": {
@@ -497,7 +503,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "PyTorch is the Deep Learning engine that powers GameBrain. It is an open-source library developed by Meta (Facebook)."),
                     ("h2", "Tensors and GPUs"),
                     ("p", "At its core, PyTorch operates on 'Tensors', which are essentially multi-dimensional arrays (like grids of numbers). The magic of PyTorch is that it can move these Tensors to your graphics card (GPU)."),
-                    ("p", "GPUs have thousands of cores that can perform millions of matrix multiplications simultaneously, which is why AI training is vastly faster on a GPU than a CPU.")
+                    ("p", "GPUs have thousands of cores that can perform millions of matrix multiplications simultaneously, which is why AI training is vastly faster on a GPU than a CPU."),
+                    ("link", "Learn more: https://pytorch.org/tutorials/beginner/basics/intro.html")
                 ]
             },
             "convergence": {
@@ -506,7 +513,8 @@ class AcademyPage(ctk.CTkFrame):
                     ("p", "How do you know when an AI is 'done' training? In Reinforcement Learning, we look for 'Convergence'."),
                     ("h2", "When to Stop"),
                     ("p", "Convergence means the AI's policy has stabilized. The Average Reward plateaus at a high number, and the Loss function stops dropping. At this point, the AI has mastered the game given its current Neural Network size and State representation."),
-                    ("p", "If it converges but still plays badly, you need to add more layers to the Neural Network, or redesign your Rewards!")
+                    ("p", "If it converges but still plays badly, you need to add more layers to the Neural Network, or redesign your Rewards!"),
+                    ("link", "Learn more: https://en.wikipedia.org/wiki/Rate_of_convergence")
                 ]
             }
         }

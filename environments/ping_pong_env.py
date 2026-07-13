@@ -30,8 +30,8 @@ class PingPongEnv:
         self.opp_y = self.height / 2 - self.paddle_h / 2
         self.ball_x = self.width / 2
         self.ball_y = self.height / 2
-        self.ball_dx = 5 * random.choice([1, -1])
-        self.ball_dy = 5 * random.choice([1, -1])
+        self.ball_dx = 10 * random.choice([1, -1])
+        self.ball_dy = 10 * random.choice([1, -1])
 
         self.score = 0
         self.frame_iteration = 0
@@ -52,17 +52,17 @@ class PingPongEnv:
 
         # Action: 0 = stay, 1 = up, 2 = down
         if action == 1:
-            self.paddle_y -= 10
+            self.paddle_y -= 20
         elif action == 2:
-            self.paddle_y += 10
+            self.paddle_y += 20
 
         self.paddle_y = max(0, min(self.height - self.paddle_h, self.paddle_y))
 
         # Opponent simple AI
         if self.opp_y + self.paddle_h/2 < self.ball_y:
-            self.opp_y += 5
+            self.opp_y += 10
         elif self.opp_y + self.paddle_h/2 > self.ball_y:
-            self.opp_y -= 5
+            self.opp_y -= 10
         self.opp_y = max(0, min(self.height - self.paddle_h, self.opp_y))
 
         # Ball movement
