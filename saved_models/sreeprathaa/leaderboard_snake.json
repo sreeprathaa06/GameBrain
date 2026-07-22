@@ -1,11 +1,18 @@
 {
     "highest_human_score": 0,
     "highest_ai_score": 0,
-    "longest_survival_steps": 0,
-    "most_apples_single_game": 0,
+    "longest_survival_steps": 355,
+    "most_apples_single_game": 9,
     "best_training_reward": 2.45,
     "fastest_training_time_sec": 15.39,
-    "recent_sessions": [],
+    "recent_sessions": [
+        {
+            "mode": "Human vs AI",
+            "score": 9,
+            "survival_steps": 355,
+            "date": "2026-07-21 19:54"
+        }
+    ],
     "achievements": {
         "first_steps": {
             "unlocked": true,

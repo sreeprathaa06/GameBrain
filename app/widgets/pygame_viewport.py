@@ -29,7 +29,7 @@ class PygameViewport(ctk.CTkLabel):
         if overlay_text:
             # We can use ImageDraw to add text, but for simplicity, 
             # we can just set the label's text attribute on top of the image
-            self.configure(text=overlay_text, text_color="red", font=("Arial", 24, "bold"), compound="center")
+            self.configure(text=overlay_text, text_color=("#B91C1C", "red"), font=("Arial", 24, "bold"), compound="center")
         else:
             self.configure(text="")
 
@@ -38,4 +38,4 @@ class PygameViewport(ctk.CTkLabel):
 
     def draw_empty(self, text="WAITING..."):
         self.ctk_image.configure(light_image=self.empty_image, dark_image=self.empty_image, size=(self.width, self.height))
-        self.configure(image=self.ctk_image, text=text, font=("Arial", 20, "bold"), text_color="gray", compound="center")
+        self.configure(image=self.ctk_image, text=text, font=("Arial", 20, "bold"), text_color=("gray30", "gray"), compound="center")

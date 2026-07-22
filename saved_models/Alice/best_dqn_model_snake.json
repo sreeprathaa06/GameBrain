@@ -1,8 +1,8 @@
 {
     "filename": "best_dqn_model_snake.pth",
-    "training_date": "2026-07-09 20:44",
-    "best_reward": 7.0,
-    "episode": 2,
+    "training_date": "2026-07-21 14:10",
+    "best_reward": 32.4,
+    "episode": 34,
     "model_size_kb": 76.24,
     "state_size": 12,
     "action_size": 4,

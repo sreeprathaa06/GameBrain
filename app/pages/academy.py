@@ -43,13 +43,15 @@ class AcademyPage(ctk.CTkFrame):
         
         # Configure tags
         self.reader._textbox.tag_config("h1", font=("Arial", 26, "bold"), foreground="#005B96", spacing3=15)
-        self.reader._textbox.tag_config("h2", font=("Arial", 20, "bold"), foreground="#B39DDB", spacing1=20, spacing3=10)
-        self.reader._textbox.tag_config("h3", font=("Arial", 16, "bold"), foreground="#81C784", spacing1=10, spacing3=5)
-        self.reader._textbox.tag_config("p", font=("Arial", 15), foreground="#E0E0E0", spacing3=10)
-        self.reader._textbox.tag_config("bold", font=("Arial", 15, "bold"), foreground="#FFFFFF")
-        self.reader._textbox.tag_config("code", font=("Courier New", 14), foreground="#10B981", background="#151515", lmargin1=20, lmargin2=20, spacing1=10, spacing3=10)
+        self.reader._textbox.tag_config("h2", font=("Arial", 20, "bold"), spacing1=20, spacing3=10)
+        self.reader._textbox.tag_config("h3", font=("Arial", 16, "bold"), spacing1=10, spacing3=5)
+        self.reader._textbox.tag_config("p", font=("Arial", 15), spacing3=10)
+        self.reader._textbox.tag_config("bold", font=("Arial", 15, "bold"))
+        self.reader._textbox.tag_config("code", font=("Courier New", 14), lmargin1=20, lmargin2=20, spacing1=10, spacing3=10)
         self.reader._textbox.tag_config("link", font=("Arial", 15, "underline"), foreground="#3B82F6", spacing1=10, spacing3=10)
         
+        self.update_tags(ctk.get_appearance_mode())
+                
         self.reader._textbox.tag_bind("link", "<Button-1>", self.open_link)
         self.reader._textbox.tag_bind("link", "<Enter>", lambda e: self.reader._textbox.config(cursor="hand2"))
         self.reader._textbox.tag_bind("link", "<Leave>", lambda e: self.reader._textbox.config(cursor="arrow"))
@@ -75,6 +77,25 @@ class AcademyPage(ctk.CTkFrame):
             url = "https://" + line_text.split("https://")[1].strip()
             webbrowser.open(url)
 
+    def _set_appearance_mode(self, mode_string):
+        super()._set_appearance_mode(mode_string)
+        self.update_tags(mode_string)
+
+    def update_tags(self, mode_string):
+        if mode_string.lower() == "light":
+            self.reader._textbox.tag_config("h2", foreground="#673AB7") # Deep Purple
+            self.reader._textbox.tag_config("h3", foreground="#2E7D32") # Dark Green
+            self.reader._textbox.tag_config("p", foreground="#222222")
+            self.reader._textbox.tag_config("bold", foreground="#000000")
+            self.reader._textbox.tag_config("code", foreground="#059669", background="#E5E7EB")
+        else:
+            self.reader._textbox.tag_config("h2", foreground="#B39DDB") 
+            self.reader._textbox.tag_config("h3", foreground="#81C784")
+            self.reader._textbox.tag_config("p", foreground="#E0E0E0")
+            self.reader._textbox.tag_config("bold", foreground="#FFFFFF")
+            self.reader._textbox.tag_config("code", foreground="#10B981", background="#151515")
+
+
     def build_index(self):
         for key, lesson in self.lessons_data.items():
             btn = ctk.CTkButton(
@@ -97,7 +118,7 @@ class AcademyPage(ctk.CTkFrame):
             self.lessons_scroll,
             text="📝 Take the Quiz",
             font=("Arial", 14, "bold"),
-            fg_color="#F57C00",
+            fg_color=("#EA580C", "#F57C00"),
             text_color="#FFFFFF",
             hover_color="#E65100",
             anchor="w",
@@ -112,16 +133,16 @@ class AcademyPage(ctk.CTkFrame):
             self.active_btn.configure(fg_color="transparent", text_color=("gray20", "gray80"))
         
         if key == "quiz":
-            self.quiz_btn.configure(fg_color="#1E3A8A", text_color="#FFFFFF")
+            self.quiz_btn.configure(fg_color=("#1D4ED8", "#1E3A8A"), text_color="#FFFFFF")
             self.active_btn = self.quiz_btn
             
             self.reader.pack_forget()
             self.quiz_frame.pack(fill="both", expand=True, padx=15, pady=15)
             self.render_quiz()
         else:
-            self.quiz_btn.configure(fg_color="#F57C00", text_color="#FFFFFF")
+            self.quiz_btn.configure(fg_color=("#EA580C", "#F57C00"), text_color="#FFFFFF")
             lesson = self.lessons_data[key]
-            lesson["btn"].configure(fg_color="#1E3A8A", text_color="#FFFFFF")
+            lesson["btn"].configure(fg_color=("#1D4ED8", "#1E3A8A"), text_color="#FFFFFF")
             self.active_btn = lesson["btn"]
             
             self.quiz_frame.pack_forget()
@@ -163,7 +184,7 @@ class AcademyPage(ctk.CTkFrame):
         self.quiz_answers = {}
         
         for i, q in enumerate(self.quiz_questions):
-            q_frame = ctk.CTkFrame(self.quiz_frame, fg_color="#1E1E1E", corner_radius=10, border_width=1, border_color="#303030")
+            q_frame = ctk.CTkFrame(self.quiz_frame, fg_color=("gray90", "#1E1E1E"), corner_radius=10, border_width=1, border_color=("gray70", "#303030"))
             q_frame.pack(fill="x", pady=10)
             
             ctk.CTkLabel(q_frame, text=f"Q{i+1}: {q['question']}", font=("Arial", 16, "bold"), wraplength=700, justify="left").pack(anchor="w", padx=15, pady=(15, 10))
@@ -177,7 +198,7 @@ class AcademyPage(ctk.CTkFrame):
                 
             ctk.CTkFrame(q_frame, height=5, fg_color="transparent").pack() # padding
             
-        submit_btn = ctk.CTkButton(self.quiz_frame, text="✅ Submit Quiz", font=("Arial", 16, "bold"), fg_color="#10B981", hover_color="#059669", height=45, command=self.submit_quiz)
+        submit_btn = ctk.CTkButton(self.quiz_frame, text="✅ Submit Quiz", font=("Arial", 16, "bold"), fg_color=("#059669", "#10B981"), hover_color="#059669", height=45, command=self.submit_quiz)
         submit_btn.pack(pady=30)
         
     def submit_quiz(self):
@@ -206,7 +227,7 @@ class AcademyPage(ctk.CTkFrame):
             msg = "📚 Keep learning! The AI Academy is here to help you."
             color = "#E11D48"
             
-        ctk.CTkLabel(self.quiz_frame, text="Quiz Results", font=("Arial", 28, "bold"), text_color="cyan").pack(pady=(20, 10))
+        ctk.CTkLabel(self.quiz_frame, text="Quiz Results", font=("Arial", 28, "bold"), text_color=("#005B96", "cyan")).pack(pady=(20, 10))
         ctk.CTkLabel(self.quiz_frame, text=f"You scored: {score} / {total}", font=("Arial", 22, "bold"), text_color=color).pack(pady=5)
         ctk.CTkLabel(self.quiz_frame, text=msg, font=("Arial", 16)).pack(pady=(5, 20))
         
@@ -243,7 +264,7 @@ class AcademyPage(ctk.CTkFrame):
             user_ans = self.quiz_answers[i].get()
             correct_ans = q["answer"]
             
-            review_frame = ctk.CTkFrame(self.quiz_frame, fg_color="#1E1E1E", corner_radius=10, border_width=1, border_color="#303030")
+            review_frame = ctk.CTkFrame(self.quiz_frame, fg_color=("gray90", "#1E1E1E"), corner_radius=10, border_width=1, border_color=("gray70", "#303030"))
             review_frame.pack(fill="x", pady=8)
             
             header_color = "#10B981" if user_ans == correct_ans else "#E11D48"
@@ -255,10 +276,10 @@ class AcademyPage(ctk.CTkFrame):
                 ctk.CTkLabel(review_frame, text=f"Your Answer: {q['options'][user_ans]}", font=("Arial", 14), text_color="gray80").pack(anchor="w", padx=35, pady=(0, 15))
             else:
                 user_text = q['options'][user_ans] if user_ans != -1 else "No Answer Selected"
-                ctk.CTkLabel(review_frame, text=f"Your Answer: {user_text}", font=("Arial", 14), text_color="#E11D48").pack(anchor="w", padx=35, pady=2)
-                ctk.CTkLabel(review_frame, text=f"Correct Answer: {q['options'][correct_ans]}", font=("Arial", 14), text_color="#10B981").pack(anchor="w", padx=35, pady=(2, 15))
+                ctk.CTkLabel(review_frame, text=f"Your Answer: {user_text}", font=("Arial", 14), text_color=("#BE123C", "#E11D48")).pack(anchor="w", padx=35, pady=2)
+                ctk.CTkLabel(review_frame, text=f"Correct Answer: {q['options'][correct_ans]}", font=("Arial", 14), text_color=("#059669", "#10B981")).pack(anchor="w", padx=35, pady=(2, 15))
 
-        retake_btn = ctk.CTkButton(self.quiz_frame, text="🔄 Retake Quiz", font=("Arial", 16, "bold"), fg_color="#2563EB", hover_color="#1D4ED8", height=45, command=self.render_quiz)
+        retake_btn = ctk.CTkButton(self.quiz_frame, text="🔄 Retake Quiz", font=("Arial", 16, "bold"), fg_color=("#1D4ED8", "#2563EB"), hover_color="#1D4ED8", height=45, command=self.render_quiz)
         retake_btn.pack(pady=30)
 
     def get_quiz_questions(self):

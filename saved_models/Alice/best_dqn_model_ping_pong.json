@@ -1,8 +1,8 @@
 {
     "filename": "best_dqn_model_ping_pong.pth",
-    "training_date": "2026-07-12 18:46",
-    "best_reward": -10,
-    "episode": 1,
+    "training_date": "2026-07-16 11:46",
+    "best_reward": 150,
+    "episode": 131,
     "model_size_kb": 72.84,
     "state_size": 6,
     "action_size": 3,

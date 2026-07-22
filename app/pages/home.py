@@ -61,7 +61,7 @@ class HomePage(ctk.CTkFrame):
         existing_card = ctk.CTkFrame(columns_frame, fg_color=("gray90", "#222222"), corner_radius=15, border_width=1, border_color=("gray80", "#333333"))
         existing_card.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
 
-        ctk.CTkLabel(existing_card, text="🔑 Existing User", font=("Arial", 22, "bold"), text_color="#10B981").pack(pady=(25, 15))
+        ctk.CTkLabel(existing_card, text="🔑 Existing User", font=("Arial", 22, "bold"), text_color=("#059669", "#10B981")).pack(pady=(25, 15))
         
         # Scan for existing users in saved_models directory
         import os
@@ -115,7 +115,7 @@ class HomePage(ctk.CTkFrame):
                 app.toggle_sidebar(True)
             self.show_state_b(name)
 
-        ctk.CTkButton(existing_card, text="Log In ➔", font=("Arial", 16, "bold"), fg_color="#10B981", hover_color="#059669", height=40, width=180, command=login_existing).pack(pady=(15, 5))
+        ctk.CTkButton(existing_card, text="Log In ➔", font=("Arial", 16, "bold"), fg_color=("#059669", "#10B981"), hover_color="#059669", height=40, width=180, command=login_existing).pack(pady=(15, 5))
 
         def forgot_password():
             name = user_combo.get().strip()
@@ -142,7 +142,7 @@ class HomePage(ctk.CTkFrame):
             y = (dialog.winfo_screenheight() - 280) // 2
             dialog.geometry(f"+{x}+{y}")
             
-            ctk.CTkLabel(dialog, text=f"Reset Password for '{name}'", font=("Arial", 22, "bold"), text_color="cyan").pack(pady=(25, 10))
+            ctk.CTkLabel(dialog, text=f"Reset Password for '{name}'", font=("Arial", 22, "bold"), text_color=("#005B96", "cyan")).pack(pady=(25, 10))
             ctk.CTkLabel(dialog, text="Please enter your new password below:", font=("Arial", 14)).pack(pady=(0, 15))
             
             pwd_entry = ctk.CTkEntry(dialog, show="*", width=300, height=40, font=("Arial", 15), placeholder_text="New Password...")
@@ -166,16 +166,16 @@ class HomePage(ctk.CTkFrame):
                     from tkinter import messagebox
                     messagebox.showwarning("Missing", "Please enter a password.")
 
-            ctk.CTkButton(dialog, text="Reset Password", font=("Arial", 16, "bold"), fg_color="#3B82F6", height=45, width=200, command=submit).pack(pady=20)
+            ctk.CTkButton(dialog, text="Reset Password", font=("Arial", 16, "bold"), fg_color=("#2563EB", "#3B82F6"), height=45, width=200, command=submit).pack(pady=20)
 
-        forgot_btn = ctk.CTkButton(existing_card, text="Forgot Password?", font=("Arial", 12, "underline"), text_color="#3B82F6", fg_color="transparent", hover_color=("gray85", "#333333"), height=20, command=forgot_password)
+        forgot_btn = ctk.CTkButton(existing_card, text="Forgot Password?", font=("Arial", 12, "underline"), text_color=("#2563EB", "#3B82F6"), fg_color="transparent", hover_color=("gray85", "#333333"), height=20, command=forgot_password)
         forgot_btn.pack(pady=(0, 15))
 
         # ---- New User Card ----
         new_card = ctk.CTkFrame(columns_frame, fg_color=("gray90", "#222222"), corner_radius=15, border_width=1, border_color=("gray80", "#333333"))
         new_card.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
 
-        ctk.CTkLabel(new_card, text="✨ New User", font=("Arial", 22, "bold"), text_color="cyan").pack(pady=(25, 15))
+        ctk.CTkLabel(new_card, text="✨ New User", font=("Arial", 22, "bold"), text_color=("#005B96", "cyan")).pack(pady=(25, 15))
         
         name_entry = ctk.CTkEntry(new_card, placeholder_text="Enter new username...", width=220, font=("Arial", 15), height=35)
         name_entry.pack(pady=15)
@@ -214,7 +214,7 @@ class HomePage(ctk.CTkFrame):
                 app.toggle_sidebar(True)
             self.show_state_b(name)
 
-        ctk.CTkButton(new_card, text="Create & Enter ➔", font=("Arial", 16, "bold"), fg_color="#3B82F6", hover_color="#2563EB", height=40, width=180, command=create_new).pack(pady=(15, 25))
+        ctk.CTkButton(new_card, text="Create & Enter ➔", font=("Arial", 16, "bold"), fg_color=("#2563EB", "#3B82F6"), hover_color="#2563EB", height=40, width=180, command=create_new).pack(pady=(15, 25))
 
     # ==========================================
     # STATE B: Main Dashboard (Onboarded User)
@@ -280,7 +280,7 @@ class HomePage(ctk.CTkFrame):
                 title_frame,
                 text=rest_of_title,
                 font=("Arial", 18, "bold"),
-                text_color="white"
+                text_color=("black", "white")
             ).pack(side="left")
             
             progress = LeaderboardManager.get_training_progress(g_id)
@@ -307,7 +307,7 @@ class HomePage(ctk.CTkFrame):
             text="🚪 Sign Out", 
             font=("Arial", 13, "bold"), 
             fg_color="transparent", 
-            text_color="#E11D48", 
+            text_color=("#BE123C", "#E11D48"), 
             hover_color="#303030", 
             width=100, 
             height=30, 
@@ -336,4 +336,4 @@ class HomePage(ctk.CTkFrame):
         dashboard_icon = get_icon("dashboard_color", size=(20, 20))
         ctk.CTkButton(btn_frame, text=" View Dashboard", image=dashboard_icon, fg_color="#8B5CF6", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("dashboard")).pack(side="left", padx=15)
         game_icon = get_icon("game_color", size=(20, 20))
-        ctk.CTkButton(btn_frame, text=" Play Games", image=game_icon, fg_color="#10B981", font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("play")).pack(side="left", padx=15)
+        ctk.CTkButton(btn_frame, text=" Play Games", image=game_icon, fg_color=("#059669", "#10B981"), font=("Arial", 16, "bold"), height=50, width=180, command=lambda: nav("play")).pack(side="left", padx=15)

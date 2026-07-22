@@ -138,6 +138,9 @@ def train(
 
         if (episode + 1) % TARGET_UPDATE == 0:
             agent.update_target_network()
+            
+        # Decay exploration rate at the end of each episode
+        agent.strategy.decay_epsilon()
 
         # -------------------------------
         # Logger

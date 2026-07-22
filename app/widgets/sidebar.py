@@ -39,14 +39,14 @@ class Sidebar(ctk.CTkFrame):
             text="" if title_icon else "🎮 ",
             image=title_icon,
             font=("Arial", 24, "bold"),
-            text_color="#00E5FF"
+            text_color=("#007B8F", "#00E5FF")
         ).pack(side="left", padx=(0, 5))
 
         ctk.CTkLabel(
             title_frame,
             text="GameBrain",
             font=("Arial", 24, "bold"),
-            text_color="white"
+            text_color=("black", "white")
         ).pack(side="left")
 
         menu_items = [
@@ -70,7 +70,7 @@ class Sidebar(ctk.CTkFrame):
             lbl_e = ctk.CTkLabel(btn, text="" if icon_img else icon_name, image=icon_img, text_color=color)
             lbl_e.pack(side="left", padx=(15, 5))
             
-            lbl_t = ctk.CTkLabel(btn, text=text, font=("Arial", 16, "bold"), text_color="white")
+            lbl_t = ctk.CTkLabel(btn, text=text, font=("Arial", 16, "bold"), text_color=("black", "white"))
             lbl_t.pack(side="left")
             
             self.buttons[page] = btn
@@ -78,7 +78,7 @@ class Sidebar(ctk.CTkFrame):
             # Hover effects and click
             def on_enter(e, p=page):
                 if self.active_page != p:
-                    self.buttons[p].configure(fg_color="#2A2A2A")
+                    self.buttons[p].configure(fg_color=("gray80", "#2A2A2A"))
                     
             def on_leave(e, p=page):
                 if self.active_page != p:
@@ -107,7 +107,7 @@ class Sidebar(ctk.CTkFrame):
             self,
             text=" Exit",
             image=exit_icon,
-            fg_color="#B22222",
+            fg_color=("#991B1B", "#B22222"),
             hover_color="#8B0000",
             command=self.master.destroy
         )
@@ -117,6 +117,6 @@ class Sidebar(ctk.CTkFrame):
         self.active_page = page
         for p, btn in self.buttons.items():
             if p == page:
-                btn.configure(fg_color="#1F6AA5")
+                btn.configure(fg_color=("#1E40AF", "#1F6AA5"))
             else:
                 btn.configure(fg_color="transparent")

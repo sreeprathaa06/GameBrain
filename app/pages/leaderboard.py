@@ -172,7 +172,7 @@ class LeaderboardView(ctk.CTkFrame):
 
 class LeaderboardPage(ctk.CTkFrame):
     def __init__(self, parent):
-        super().__init__(parent, fg_color="#1B1B1B")
+        super().__init__(parent, fg_color=("gray90", "#1B1B1B"))
         self.settings = SettingsManager()
         self.current_view = None
 
@@ -204,7 +204,7 @@ class LeaderboardPage(ctk.CTkFrame):
             self.scroll_canvas,
             text="Select a game to view its high scores, history, and achievements",
             font=("Arial", 16),
-            text_color="gray70"
+            text_color=("gray40", "gray70")
         )
         subtitle.pack(pady=(0, 25))
 
@@ -212,9 +212,9 @@ class LeaderboardPage(ctk.CTkFrame):
             card = ctk.CTkFrame(
                 self.scroll_canvas,
                 corner_radius=20,
-                fg_color="#202020",
+                fg_color=("gray85", "#202020"),
                 border_width=1,
-                border_color="#303030"
+                border_color=("gray70", "#303030")
             )
             card.pack(fill="x", padx=35, pady=15)
 
@@ -230,7 +230,7 @@ class LeaderboardPage(ctk.CTkFrame):
                     ctk.CTkLabel(title_frame, text="", image=list_img).pack(side="left", padx=(0, 10))
 
             ctk.CTkLabel(title_frame, text=info["name"], font=("Arial", 24, "bold"), text_color=info.get("title_color", "white")).pack(side="left")
-            ctk.CTkLabel(left, text=info["desc"], font=("Arial", 14), text_color="gray70").pack(anchor="w", pady=(5, 0))
+            ctk.CTkLabel(left, text=info["desc"], font=("Arial", 14), text_color=("gray40", "gray70")).pack(anchor="w", pady=(5, 0))
 
             right = ctk.CTkFrame(card, fg_color="transparent")
             right.pack(side="right", padx=25, pady=20)

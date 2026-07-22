@@ -168,8 +168,6 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-        self.strategy.decay_epsilon()
-
         return loss.item()
 
     # =====================================================

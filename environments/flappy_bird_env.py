@@ -13,11 +13,9 @@ class FlappyBirdEnv:
         self.bird_size = 20
         self.gravity = 1.5
         self.flap_strength = -15
-        
         self.pipe_width = 50
         self.pipe_gap = 120
         self.pipe_vel_x = -8
-
         if render or render_callback is not None:
             if not pygame.get_init():
                 pygame.init()

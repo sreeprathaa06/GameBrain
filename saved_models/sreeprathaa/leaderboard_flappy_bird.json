@@ -1,21 +1,15 @@
 {
     "highest_human_score": 0,
     "highest_ai_score": 0,
-    "longest_survival_steps": 163,
-    "most_apples_single_game": 2,
+    "longest_survival_steps": 40,
+    "most_apples_single_game": 0,
     "best_training_reward": 0.0,
     "fastest_training_time_sec": 0.0,
     "recent_sessions": [
         {
             "mode": "Human vs AI",
-            "score": 2,
-            "survival_steps": 163,
-            "date": "2026-07-21 19:54"
-        },
-        {
-            "mode": "Human vs AI",
             "score": 0,
-            "survival_steps": 55,
+            "survival_steps": 40,
             "date": "2026-07-21 19:54"
         }
     ],
@@ -41,7 +35,7 @@
             "desc": "AI reaches high score"
         },
         "beat_the_machine": {
-            "unlocked": true,
+            "unlocked": false,
             "title": "Beat the Machine",
             "desc": "Win against the AI in Human vs AI mode"
         }

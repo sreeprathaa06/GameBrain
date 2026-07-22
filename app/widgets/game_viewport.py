@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 class GameViewport(ctk.CTkFrame):
     def __init__(self, parent, grid_width=20, grid_height=20, cell_size=20, accent_color="blue", **kwargs):
-        super().__init__(parent, fg_color="#181818", corner_radius=15, border_width=1, border_color="#303030", **kwargs)
+        super().__init__(parent, fg_color=("gray95", "#181818"), corner_radius=15, border_width=1, border_color=("gray70", "#303030"), **kwargs)
 
         self.grid_width = grid_width
         self.grid_height = grid_height

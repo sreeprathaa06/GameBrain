@@ -209,7 +209,7 @@ class DashboardView(ctk.CTkFrame):
 
 class DashboardPage(ctk.CTkFrame):
     def __init__(self, parent):
-        super().__init__(parent, fg_color="#1B1B1B")
+        super().__init__(parent, fg_color=("gray90", "#1B1B1B"))
         self.settings = SettingsManager()
         self.current_view = None
 
@@ -241,7 +241,7 @@ class DashboardPage(ctk.CTkFrame):
             self.scroll_canvas,
             text="Select a game to view its AI training performance metrics",
             font=("Arial", 16),
-            text_color="gray70"
+            text_color=("gray40", "gray70")
         )
         subtitle.pack(pady=(0, 25))
 
@@ -249,9 +249,9 @@ class DashboardPage(ctk.CTkFrame):
             card = ctk.CTkFrame(
                 self.scroll_canvas,
                 corner_radius=20,
-                fg_color="#202020",
+                fg_color=("gray85", "#202020"),
                 border_width=1,
-                border_color="#303030"
+                border_color=("gray70", "#303030")
             )
             card.pack(fill="x", padx=35, pady=15)
 
@@ -279,14 +279,14 @@ class DashboardPage(ctk.CTkFrame):
                 title_frame,
                 text=rest_of_title,
                 font=("Arial", 28, "bold"),
-                text_color="white"
+                text_color=("black", "white")
             ).pack(side="left")
 
             ctk.CTkLabel(
                 left,
                 text=info["desc"],
                 font=("Arial", 15),
-                text_color="gray70"
+                text_color=("gray40", "gray70")
             ).pack(anchor="w", pady=(5, 0))
 
             right = ctk.CTkFrame(card, fg_color="transparent")
@@ -299,7 +299,7 @@ class DashboardPage(ctk.CTkFrame):
                 image=dashboard_icon,
                 width=180,
                 height=45,
-                fg_color="#10B981",
+                fg_color=("#059669", "#10B981"),
                 hover_color="#059669",
                 corner_radius=12,
                 font=("Arial", 14, "bold"),

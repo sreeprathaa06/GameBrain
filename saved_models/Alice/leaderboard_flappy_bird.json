@@ -7,6 +7,72 @@
     "fastest_training_time_sec": 0.0,
     "recent_sessions": [
         {
+            "mode": "Human vs AI",
+            "score": 0,
+            "survival_steps": 132,
+            "date": "2026-07-16 13:58"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 111,
+            "date": "2026-07-16 13:54"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 18,
+            "date": "2026-07-16 13:54"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 62,
+            "date": "2026-07-16 13:54"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 24,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 23,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 22,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 21,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 20,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 19,
+            "date": "2026-07-16 13:53"
+        },
+        {
+            "mode": "Human",
+            "score": 0,
+            "survival_steps": 18,
+            "date": "2026-07-16 13:53"
+        },
+        {
             "mode": "Human",
             "score": 0,
             "survival_steps": 210,

@@ -1,16 +1,16 @@
 {
-    "theme": "dark",
+    "theme": "light",
     "accent_color": "orange",
     "training_speed": 30,
-    "fps": 9,
-    "graph_refresh_rate": 10,
+    "fps": 11,
+    "graph_refresh_rate": 50,
     "game_speed": "Normal",
     "model_dir": "saved_models",
     "gpu_toggle": true,
     "active_model": "best_dqn_model.pth",
     "window_scaling": "100%",
     "active_game": "snake",
-    "username": "sreeprathaa",
+    "username": "Alice",
     "age": "",
     "experience": "Beginner"
 }

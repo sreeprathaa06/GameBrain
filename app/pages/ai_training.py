@@ -23,7 +23,7 @@ from app.pages.play import GAME_REGISTRY
 
 class AITrainingPage(ctk.CTkFrame):
     def __init__(self, parent):
-        super().__init__(parent, fg_color="#1B1B1B")
+        super().__init__(parent, fg_color=("gray90", "#1B1B1B"))
 
         self.settings = SettingsManager()
         self.game_id = self.settings.get("active_game", "snake")
@@ -57,6 +57,9 @@ class AITrainingPage(ctk.CTkFrame):
         self.game_id = "snake"
         self.current_username = self.settings.get("username", "Player1")
         
+        self.main_scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
+        self.main_scroll.pack(fill="both", expand=True)
+
         self.build_ui()
         self.update_active_game()
 
@@ -137,12 +140,12 @@ class AITrainingPage(ctk.CTkFrame):
             if is_pygame:
                 self.viewport = PygameViewport(self.vp_card, width=400, height=400)
             else:
-                self.viewport = GameViewport(self.vp_card, grid_width=20, grid_height=20, cell_size=15, accent_color=accent)
+                self.viewport = GameViewport(self.vp_card, grid_width=20, grid_height=20, cell_size=20, accent_color=accent)
             self.viewport.pack(expand=True, pady=10)
 
     def build_ui(self):
         # 1. Header Frame
-        header = ctk.CTkFrame(self, fg_color="#202020", corner_radius=12, height=65, border_width=1, border_color="#303030")
+        header = ctk.CTkFrame(self.main_scroll, fg_color=("gray85", "#202020"), corner_radius=12, height=65, border_width=1, border_color=("gray70", "#303030"))
         header.pack(fill="x", padx=15, pady=(10, 5))
         header.pack_propagate(False)
 
@@ -153,7 +156,7 @@ class AITrainingPage(ctk.CTkFrame):
         self.game_icon_lbl = ctk.CTkLabel(header, text="")
         self.game_icon_lbl.pack(side="left", padx=(0, 5))
 
-        self.title_lbl = ctk.CTkLabel(header, text="Training Control Center", font=("Arial", 18, "bold"), text_color="cyan")
+        self.title_lbl = ctk.CTkLabel(header, text="Training Control Center", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan"))
         self.title_lbl.pack(side="left", padx=(0, 20))
 
         # Right status markers
@@ -162,7 +165,7 @@ class AITrainingPage(ctk.CTkFrame):
         self.status_lbl = self.status_marker(header, "Status", "Idle", color="orange")
 
         # 2. Main content split (Middle)
-        mid_layout = ctk.CTkFrame(self, fg_color="transparent")
+        mid_layout = ctk.CTkFrame(self.main_scroll, fg_color="transparent")
         mid_layout.pack(fill="both", expand=True, padx=15, pady=5)
 
         # Left side: Viewport & Controls
@@ -170,15 +173,15 @@ class AITrainingPage(ctk.CTkFrame):
         left_side.pack(side="left", fill="both", expand=True, padx=(0, 8))
 
         # Viewport frame
-        self.vp_card = ctk.CTkFrame(left_side, fg_color="#202020", corner_radius=12, border_width=1, border_color="#303030")
+        self.vp_card = ctk.CTkFrame(left_side, fg_color=("gray85", "#202020"), corner_radius=12, border_width=1, border_color=("gray70", "#303030"))
         self.vp_card.pack(fill="both", expand=True, pady=(0, 6))
 
         accent = self.settings.get("accent_color", "blue")
-        self.viewport = GameViewport(self.vp_card, grid_width=20, grid_height=20, cell_size=15, accent_color=accent)
+        self.viewport = GameViewport(self.vp_card, grid_width=20, grid_height=20, cell_size=20, accent_color=accent)
         self.viewport.pack(expand=True, pady=10)
 
         # Statistics HUD Frame
-        hud = ctk.CTkFrame(left_side, fg_color="#202020", corner_radius=12, border_width=1, border_color="#303030")
+        hud = ctk.CTkFrame(left_side, fg_color=("gray85", "#202020"), corner_radius=12, border_width=1, border_color=("gray70", "#303030"))
         hud.pack(fill="x", pady=6)
 
         self.ep_lbl = self.hud_cell(hud, "Episode", "0 / 500", 0, 0)
@@ -193,24 +196,24 @@ class AITrainingPage(ctk.CTkFrame):
         hud.grid_columnconfigure((0,1,2,3), weight=1)
 
         # Right side: Interactive log feed & buttons card
-        right_side = ctk.CTkFrame(mid_layout, fg_color="#202020", corner_radius=12, border_width=1, border_color="#303030", width=340)
+        right_side = ctk.CTkFrame(mid_layout, fg_color=("gray85", "#202020"), corner_radius=12, border_width=1, border_color=("gray70", "#303030"), width=340)
         right_side.pack(side="right", fill="both", padx=(8, 0))
         right_side.pack_propagate(False)
 
         # Log feed
         ctk.CTkLabel(right_side, text="Live Training Logs", font=("Arial", 14, "bold")).pack(pady=8)
-        self.log_txt = ctk.CTkTextbox(right_side, height=180, fg_color="#181818", border_width=1, border_color="#303030")
+        self.log_txt = ctk.CTkTextbox(right_side, height=180, fg_color=("gray95", "#181818"), border_width=1, border_color=("gray70", "#303030"))
         self.log_txt.pack(fill="both", expand=True, padx=12, pady=4)
 
         # Training Controls
-        ctrls_title = ctk.CTkLabel(right_side, text="Trainer Dashboard Controls", font=("Arial", 12, "bold"), text_color="gray70")
+        ctrls_title = ctk.CTkLabel(right_side, text="Trainer Dashboard Controls", font=("Arial", 12, "bold"), text_color=("gray40", "gray70"))
         ctrls_title.pack(pady=(12, 4))
 
         # Speed slider
         slider_row = ctk.CTkFrame(right_side, fg_color="transparent")
         slider_row.pack(fill="x", padx=15, pady=4)
         ctk.CTkLabel(slider_row, text="Step Delay:", font=("Arial", 11)).pack(side="left")
-        self.slider_val_lbl = ctk.CTkLabel(slider_row, text="30ms", font=("Arial", 11, "bold"), text_color="cyan")
+        self.slider_val_lbl = ctk.CTkLabel(slider_row, text="30ms", font=("Arial", 11, "bold"), text_color=("#005B96", "cyan"))
         self.slider_val_lbl.pack(side="right")
         self.speed_slider = ctk.CTkSlider(right_side, from_=0, to=150, command=self.change_speed)
         self.speed_slider.pack(fill="x", padx=15, pady=(0, 10))
@@ -221,41 +224,41 @@ class AITrainingPage(ctk.CTkFrame):
         btn_grid.pack(fill="x", padx=10, pady=5)
 
         rocket_icon = get_icon("rocket", size=(16, 16))
-        self.start_btn = ctk.CTkButton(btn_grid, text=" Train", image=rocket_icon, fg_color="#10B981", width=95, command=self.start_training)
+        self.start_btn = ctk.CTkButton(btn_grid, text=" Train", image=rocket_icon, fg_color=("#059669", "#10B981"), width=95, command=self.start_training)
         self.start_btn.grid(row=0, column=0, padx=4, pady=4)
 
         pause_icon = get_icon("pause", size=(16, 16))
-        self.pause_btn = ctk.CTkButton(btn_grid, text=" Pause", image=pause_icon, fg_color="#F57C00", width=95, state="disabled", command=self.toggle_pause)
+        self.pause_btn = ctk.CTkButton(btn_grid, text=" Pause", image=pause_icon, fg_color=("#EA580C", "#F57C00"), width=95, state="disabled", command=self.toggle_pause)
         self.pause_btn.grid(row=0, column=1, padx=4, pady=4)
 
         stop_icon = get_icon("stop", size=(16, 16))
-        self.stop_btn = ctk.CTkButton(btn_grid, text=" Stop", image=stop_icon, fg_color="#D32F2F", width=95, state="disabled", command=self.stop_training)
+        self.stop_btn = ctk.CTkButton(btn_grid, text=" Stop", image=stop_icon, fg_color=("#B91C1C", "#D32F2F"), width=95, state="disabled", command=self.stop_training)
         self.stop_btn.grid(row=0, column=2, padx=4, pady=4)
 
         refresh_icon = get_icon("refresh_color", size=(16, 16))
-        self.reset_btn = ctk.CTkButton(btn_grid, text=" Reset", image=refresh_icon, fg_color="#1E3A8A", width=95, command=self.reset_training)
+        self.reset_btn = ctk.CTkButton(btn_grid, text=" Reset", image=refresh_icon, fg_color=("#1D4ED8", "#1E3A8A"), width=95, command=self.reset_training)
         self.reset_btn.grid(row=1, column=0, padx=4, pady=4)
 
         csv_icon = get_icon("csv", size=(16, 16))
-        self.export_csv_btn = ctk.CTkButton(btn_grid, text=" CSV", image=csv_icon, fg_color="#0D9488", width=95, command=self.export_csv)
+        self.export_csv_btn = ctk.CTkButton(btn_grid, text=" CSV", image=csv_icon, fg_color=("#0F766E", "#0D9488"), width=95, command=self.export_csv)
         self.export_csv_btn.grid(row=1, column=1, padx=4, pady=4)
 
         image_icon = get_icon("image", size=(16, 16))
-        self.export_graph_btn = ctk.CTkButton(btn_grid, text=" Export Plot", image=image_icon, fg_color="#7B1FA2", width=95, command=self.export_graph)
+        self.export_graph_btn = ctk.CTkButton(btn_grid, text=" Export Plot", image=image_icon, fg_color=("#6B21A8", "#7B1FA2"), width=95, command=self.export_graph)
         self.export_graph_btn.grid(row=1, column=2, padx=4, pady=4)
 
         play_btn_icon = get_icon("play_btn", size=(16, 16))
-        self.play_best_btn = ctk.CTkButton(right_side, text=" Play Best AI Model", image=play_btn_icon, fg_color="#2563EB", command=self.play_best_ai)
+        self.play_best_btn = ctk.CTkButton(right_side, text=" Play Best AI Model", image=play_btn_icon, fg_color=("#1D4ED8", "#2563EB"), command=self.play_best_ai)
         self.play_best_btn.pack(fill="x", padx=12, pady=4)
 
         video_icon = get_icon("video", size=(16, 16))
-        self.replay_best_btn = ctk.CTkButton(right_side, text=" Replay Best Episode", image=video_icon, fg_color="#5B21B6", command=self.replay_best_episode)
+        self.replay_best_btn = ctk.CTkButton(right_side, text=" Replay Best Episode", image=video_icon, fg_color=("#4C1D95", "#5B21B6"), command=self.replay_best_episode)
         self.replay_best_btn.pack(fill="x", padx=12, pady=(4, 15))
 
         btn_grid.grid_columnconfigure((0,1,2), weight=1)
 
         # 3. Bottom Frame: tabbed matplotlib plots
-        plots_card = ctk.CTkFrame(self, fg_color="#202020", corner_radius=12, border_width=1, border_color="#303030", height=240)
+        plots_card = ctk.CTkFrame(self.main_scroll, fg_color=("gray85", "#202020"), corner_radius=12, border_width=1, border_color=("gray70", "#303030"), height=320)
         plots_card.pack(fill="x", padx=15, pady=(5, 10))
         plots_card.pack_propagate(False)
 
@@ -272,7 +275,7 @@ class AITrainingPage(ctk.CTkFrame):
     def status_marker(self, parent, title, val, color="lightgreen"):
         frame = ctk.CTkFrame(parent, fg_color="transparent")
         frame.pack(side="right", padx=15, pady=10)
-        ctk.CTkLabel(frame, text=title, font=("Arial", 11), text_color="gray70").pack(side="left", padx=4)
+        ctk.CTkLabel(frame, text=title, font=("Arial", 11), text_color=("gray40", "gray70")).pack(side="left", padx=4)
         lbl = ctk.CTkLabel(frame, text=val, font=("Arial", 13, "bold"), text_color=color)
         lbl.pack(side="left", padx=4)
         return lbl
@@ -280,7 +283,7 @@ class AITrainingPage(ctk.CTkFrame):
     def hud_cell(self, parent, title, initial_val, r, c):
         cell = ctk.CTkFrame(parent, fg_color="transparent")
         cell.grid(row=r, column=c, padx=10, pady=4, sticky="w")
-        ctk.CTkLabel(cell, text=title, font=("Arial", 11), text_color="gray60").pack(anchor="w")
+        ctk.CTkLabel(cell, text=title, font=("Arial", 11), text_color=("gray30", "gray60")).pack(anchor="w")
         lbl = ctk.CTkLabel(cell, text=initial_val, font=("Arial", 14, "bold"), text_color="#FFFFFF")
         lbl.pack(anchor="w")
         return lbl
@@ -372,12 +375,12 @@ class AITrainingPage(ctk.CTkFrame):
             return
         if self.pause_event.is_set():
             self.pause_event.clear()
-            self.pause_btn.configure(text=" Pause", image=get_icon("pause", size=(16, 16)), fg_color="#F57C00")
+            self.pause_btn.configure(text=" Pause", image=get_icon("pause", size=(16, 16)), fg_color=("#EA580C", "#F57C00"))
             self.status_lbl.configure(text="Training", text_color="orange")
             self.log_txt.insert("end", "▶ Resumed training thread.\n")
         else:
             self.pause_event.set()
-            self.pause_btn.configure(text=" Resume", image=get_icon("play_btn", size=(16, 16)), fg_color="#10B981")
+            self.pause_btn.configure(text=" Resume", image=get_icon("play_btn", size=(16, 16)), fg_color=("#059669", "#10B981"))
             self.status_lbl.configure(text="Paused", text_color="yellow")
             self.log_txt.insert("end", "⏸ Paused training thread.\n")
 

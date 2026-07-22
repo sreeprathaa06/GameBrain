@@ -58,7 +58,7 @@ class AITrainingPage(ctk.CTkFrame):
         header.pack_propagate(False)
 
         # Left title
-        ctk.CTkLabel(header, text="🧠 Training Control Center", font=("Arial", 18, "bold"), text_color="cyan").pack(side="left", padx=20)
+        ctk.CTkLabel(header, text="🧠 Training Control Center", font=("Arial", 18, "bold"), text_color=("#005B96", "cyan")).pack(side="left", padx=20)
 
         # Right status markers
         self.device_lbl = self.status_marker(header, "Device", "CUDA" if torch.cuda.is_available() else "CPU")
@@ -107,14 +107,14 @@ class AITrainingPage(ctk.CTkFrame):
         self.log_txt.pack(fill="both", expand=True, padx=12, pady=4)
 
         # Training Controls
-        ctrls_title = ctk.CTkLabel(right_side, text="Trainer Dashboard Controls", font=("Arial", 12, "bold"), text_color="gray70")
+        ctrls_title = ctk.CTkLabel(right_side, text="Trainer Dashboard Controls", font=("Arial", 12, "bold"), text_color=("gray40", "gray70"))
         ctrls_title.pack(pady=(12, 4))
 
         # Speed slider
         slider_row = ctk.CTkFrame(right_side, fg_color="transparent")
         slider_row.pack(fill="x", padx=15, pady=4)
         ctk.CTkLabel(slider_row, text="Step Delay:", font=("Arial", 11)).pack(side="left")
-        self.slider_val_lbl = ctk.CTkLabel(slider_row, text="30ms", font=("Arial", 11, "bold"), text_color="cyan")
+        self.slider_val_lbl = ctk.CTkLabel(slider_row, text="30ms", font=("Arial", 11, "bold"), text_color=("#005B96", "cyan"))
         self.slider_val_lbl.pack(side="right")
         self.speed_slider = ctk.CTkSlider(right_side, from_=0, to=150, command=self.change_speed)
         self.speed_slider.pack(fill="x", padx=15, pady=(0, 10))
@@ -168,7 +168,7 @@ class AITrainingPage(ctk.CTkFrame):
     def status_marker(self, parent, title, val, color="lightgreen"):
         frame = ctk.CTkFrame(parent, fg_color="transparent")
         frame.pack(side="right", padx=15, pady=10)
-        ctk.CTkLabel(frame, text=title, font=("Arial", 11), text_color="gray70").pack(side="left", padx=4)
+        ctk.CTkLabel(frame, text=title, font=("Arial", 11), text_color=("gray40", "gray70")).pack(side="left", padx=4)
         lbl = ctk.CTkLabel(frame, text=val, font=("Arial", 13, "bold"), text_color=color)
         lbl.pack(side="left", padx=4)
         return lbl
@@ -176,7 +176,7 @@ class AITrainingPage(ctk.CTkFrame):
     def hud_cell(self, parent, title, initial_val, r, c):
         cell = ctk.CTkFrame(parent, fg_color="transparent")
         cell.grid(row=r, column=c, padx=10, pady=4, sticky="w")
-        ctk.CTkLabel(cell, text=title, font=("Arial", 11), text_color="gray60").pack(anchor="w")
+        ctk.CTkLabel(cell, text=title, font=("Arial", 11), text_color=("gray30", "gray60")).pack(anchor="w")
         lbl = ctk.CTkLabel(cell, text=initial_val, font=("Arial", 14, "bold"), text_color="#FFFFFF")
         lbl.pack(anchor="w")
         return lbl
