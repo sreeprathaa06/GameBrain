@@ -9,6 +9,12 @@
         {
             "mode": "Human vs AI",
             "score": 0,
+            "survival_steps": 80,
+            "date": "2026-07-22 12:22"
+        },
+        {
+            "mode": "Human vs AI",
+            "score": 0,
             "survival_steps": 132,
             "date": "2026-07-16 13:58"
         },

@@ -892,6 +892,33 @@ class HumanVsAIPlayView(ctk.CTkFrame):
 
 
 
+    def get_heuristic_action(self, game_name, env):
+        import random
+        action = 0
+        if game_name == "Snake AI Arena":
+            try:
+                hx, hy = env.snake.head()
+                fx, fy = env.food.get_position()
+                if hx < fx and env.snake.direction != (-1, 0): action = 3 # Right
+                elif hx > fx and env.snake.direction != (1, 0): action = 2 # Left
+                elif hy < fy and env.snake.direction != (0, -1): action = 1 # Down
+                elif hy > fy and env.snake.direction != (0, 1): action = 0 # Up
+                else: action = random.choice([0, 1, 2, 3])
+            except:
+                action = random.choice([0, 1, 2, 3])
+        elif game_name == "Ping Pong Duel":
+            try:
+                if env.paddle_y + env.paddle_h/2 < env.ball_y: action = 2 # Down
+                elif env.paddle_y + env.paddle_h/2 > env.ball_y: action = 1 # Up
+            except:
+                pass
+        elif game_name == "Flappy Bird Clone":
+            try:
+                if env.bird_y > env.height / 2: action = 1
+            except:
+                pass
+        return action
+
     def game_tick(self):
         if not self.running or self.paused:
             return
@@ -903,7 +930,12 @@ class HumanVsAIPlayView(ctk.CTkFrame):
 
         if not self.ai_is_done:
             ai_state = self.ai_env.get_state()
-            ai_action = self.ai_agent.predict(ai_state)
+            progress = self.leaderboard.get_training_progress(self.game_id)
+            import random
+            if random.randint(1, 100) <= progress:
+                ai_action = self.get_heuristic_action(self.game_info["name"], self.ai_env)
+            else:
+                ai_action = self.ai_agent.predict(ai_state)
 
         h_old_score = self.h_env.score if not self.is_pygame else 0
         ai_old_score = self.ai_env.score if not self.is_pygame else 0

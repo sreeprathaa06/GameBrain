@@ -8,6 +8,12 @@
     "recent_sessions": [
         {
             "mode": "Human vs AI",
+            "score": 5,
+            "survival_steps": 101,
+            "date": "2026-07-22 12:14"
+        },
+        {
+            "mode": "Human vs AI",
             "score": 8,
             "survival_steps": 218,
             "date": "2026-07-21 19:27"
